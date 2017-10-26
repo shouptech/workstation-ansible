@@ -1,4 +1,5 @@
 ---
+# Tasks to be done as root
 - hosts: localhost
   vars:
     ansible_become: true
@@ -29,3 +30,14 @@
         - zsh
         - nextcloud-client
         - fonts-hack-web
+
+
+# Tasks to be done as mike
+- hosts: localhost
+  vars:
+    ansible_become: false
+  tasks:
+    - name: copy terminator config
+      copy:
+        src: files/terminator
+        dest: "{{ ansible_env.HOME }}/.config"
