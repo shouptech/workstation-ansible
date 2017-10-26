@@ -30,6 +30,7 @@
         - zsh
         - nextcloud-client
         - fonts-hack-web
+        - gnome-shell-extension-appindicator # Adds tray icons, still needs to be enabled
     - name: mike shell
       user:
         name: mike
