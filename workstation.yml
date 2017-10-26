@@ -10,8 +10,11 @@
     - name: atom ppa
       apt_repository:
         repo: 'ppa:webupd8team/atom'
+    - name: update apt cache
+      apt:
+        update_cache: yes
     - name: workstation packages
-      package:
+      apt:
         name: "{{ item }}"
         state: present
       with_items:
