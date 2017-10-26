@@ -49,3 +49,7 @@
       git:
         repo: git://github.com/robbyrussell/oh-my-zsh.git
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    - name: copy zshrc
+      copy:
+        src: files/zshrc
+        dest: "{{ ansible_env.HOME }}/.zshrc"
