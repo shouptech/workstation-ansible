@@ -31,6 +31,9 @@
         - nextcloud-client
         - fonts-hack-web
         - gnome-shell-extension-appindicator # Adds tray icons, still needs to be enabled
+    - name: mattermost package
+      apt:
+        deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
     - name: mike shell
       user:
         name: mike
