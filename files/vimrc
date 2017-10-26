@@ -1,0 +1,10 @@
+autocmd FileType markdown set ts=4 expandtab
+autocmd FileType yaml set ts=2 expandtab
+autocmd FileType python set ts=4 expandtab
+autocmd FileType html set ts=2 expandtab
+
+syntax enable
+
+set number
+
+set colorcolumn=80
