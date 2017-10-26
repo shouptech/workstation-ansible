@@ -12,7 +12,8 @@
         repo: 'ppa:webupd8team/atom'
     - name: update apt cache
       apt:
-        update_cache: yes
+        update_cache: true
+      changed_when: false
     - name: workstation packages
       apt:
         name: "{{ item }}"
