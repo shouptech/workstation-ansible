@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  vars:
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_user: root
+  tasks:
+    - name: test connection
+      ping:
+    - name: package ansible
+      package:
+        name: ansible
+        state: present
+    - name: package vim
+      package:
+        name: vim
+        state: present
