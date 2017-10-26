@@ -30,6 +30,10 @@
         - zsh
         - nextcloud-client
         - fonts-hack-web
+    - name: mike shell
+      user:
+        name: mike
+        shell: /usr/bin/zsh
 
 
 # Tasks to be done as mike
@@ -53,3 +57,11 @@
       copy:
         src: files/zshrc
         dest: "{{ ansible_env.HOME }}/.zshrc"
+    - name: oh-my-zsh custom theme directory
+      file:
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
+        state: directory
+    - name: copy custom theme
+      copy:
+        src: files/gentoo-mod.zsh-theme
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
