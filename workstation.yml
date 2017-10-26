@@ -7,6 +7,9 @@
   tasks:
     - name: test connection
       ping:
+    - name: atom ppa
+      apt_repository:
+        repo: 'ppa:webupd8team/atom'
     - name: workstation packages
       package:
         name: "{{ item }}"
@@ -15,3 +18,4 @@
         - vim
         - ansible
         - terminator
+        - atom
