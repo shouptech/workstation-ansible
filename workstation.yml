@@ -6,8 +6,6 @@
     ansible_become_method: sudo
     ansible_become_user: root
   tasks:
-    - name: test connection
-      ping:
     - name: allow nopasswd sudo
       lineinfile:
         dest: /etc/sudoers
