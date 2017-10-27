@@ -23,4 +23,5 @@
         - bumblebee-nvidia
         - primus
         - linux-headers-generic
+        - nvidia-384
       notify: reboot
