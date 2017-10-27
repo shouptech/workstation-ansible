@@ -36,6 +36,10 @@
         - nextcloud-client
         - fonts-hack-web
         - gnome-shell-extension-appindicator # Adds tray icons, still needs to be enabled
+        - network-manager-openconnect
+        - network-manager-openconnect-gnome
+        - network-manager-l2tp
+        - network-manager-l2tp-gnome
     - name: mattermost package
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
