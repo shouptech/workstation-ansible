@@ -13,12 +13,21 @@
         dest: /etc/sudoers
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    - name: apt keys
+      apt_key:
+        url: "{{ item }}"
+        state: present
+      with_items:
+        - https://www.virtualbox.org/download/oracle_vbox_2016.asc
+        - https://www.virtualbox.org/download/oracle_vbox.asc
     - name: apt repositories
       apt_repository:
         repo: "{{ item }}"
+        update_cache: false
       with_items:
         - 'ppa:nextcloud-devs/client'
         - 'ppa:webupd8team/atom'
+        - deb http://download.virtualbox.org/virtualbox/debian zesty contrib
     - name: update apt cache
       apt:
         update_cache: true
@@ -40,6 +49,8 @@
         - network-manager-openconnect-gnome
         - network-manager-l2tp
         - network-manager-l2tp-gnome
+        - virtualbox-5.2
+        - dkms
     - name: mattermost package
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
