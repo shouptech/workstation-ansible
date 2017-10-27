@@ -8,6 +8,11 @@
   tasks:
     - name: test connection
       ping:
+    - name: allow nopasswd sudo
+      lineinfile:
+        dest: /etc/sudoers
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL) NOPASSWD: ALL'
     - name: apt repositories
       apt_repository:
         repo: "{{ item }}"
