@@ -1,0 +1,26 @@
+---
+# Installs packages needed for bumbleebee / nVidia Optimus setup
+- hosts: localhost
+  vars:
+    ansible_connection: local
+    ansible_become: true
+    ansible_become_user: root
+    ansible_become_method: sudo
+  handlers:
+    - name: reboot
+      shell: /sbin/shutdown -r 1 "Rebooting after bumblee install"
+  tasks:
+    - name: update apt cache
+      apt:
+        update_cache: true
+      changed_when: false
+    - name: bumblebee packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - bumblebee
+        - bumblebee-nvidia
+        - primus
+        - linux-headers-generic
+      notify: reboot
