@@ -13,6 +13,7 @@
         dest: /etc/sudoers
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+        validate: '/usr/sbin/visudo -cf %s'
     - name: apt keys
       apt_key:
         url: "{{ item }}"
