@@ -5,7 +5,30 @@
     ansible_become: true
     ansible_become_method: sudo
     ansible_become_user: root
+  handlers:
+    - name: use dns network-manager
+      lineinfile:
+        dest: /etc/NetworkManager/NetworkManager.conf
+        line: dns=default
+        insertafter: "^[main]"
+    - name: unlink resolv.conf
+      shell: unlink /etc/resolv.conf
+    - name: restart network-manager
+      systemd:
+        name: network-manager
+        state: restarted
   tasks:
+    - name: disable systemd-resolved service
+      systemd:
+        name: systemd-resolved
+        state: stopped
+        enabled: false
+      notify:
+        - use dns network-manager
+        - unlink resolv.conf
+        - restart network-manager
+    - name: flush handlers
+      meta: flush_handlers
     - name: allow nopasswd sudo
       lineinfile:
         dest: /etc/sudoers
