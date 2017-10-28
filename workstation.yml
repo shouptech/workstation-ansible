@@ -75,6 +75,10 @@
         - dkms
         - mesa-utils
         - whois
+        - remmina
+        - remmina-plugin-rdp
+        - remmina-plugin-gnome
+        - freerdp-x11
     - name: mattermost package
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
