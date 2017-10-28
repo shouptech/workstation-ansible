@@ -51,6 +51,7 @@
         - virtualbox-5.2
         - dkms
         - mesa-utils
+        - whois
     - name: mattermost package
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
