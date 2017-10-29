@@ -51,6 +51,10 @@
       with_items:
         - https://www.virtualbox.org/download/oracle_vbox_2016.asc
         - https://www.virtualbox.org/download/oracle_vbox.asc
+    - name: dropbox apt key
+      apt_key:
+        id: 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
+        keyserver: pgp.mit.edu
     - name: apt repositories
       apt_repository:
         repo: "{{ item }}"
@@ -59,6 +63,7 @@
         - 'ppa:nextcloud-devs/client'
         - 'ppa:webupd8team/atom'
         - deb http://download.virtualbox.org/virtualbox/debian zesty contrib
+        - deb http://linux.dropbox.com/ubuntu xenial main
     - name: update apt cache
       apt:
         update_cache: true
@@ -88,6 +93,7 @@
         - remmina-plugin-rdp
         - remmina-plugin-gnome
         - freerdp-x11
+        - dropbox
     - name: check mattermost package
       shell: dpkg-query -l mattermost-desktop
       register: mattermost
