@@ -6,19 +6,28 @@
     ansible_become_method: sudo
     ansible_become_user: root
   handlers:
-    - name: use dns network-manager
+    - name: config NetworkManger.conf for default dns
       lineinfile:
         dest: /etc/NetworkManager/NetworkManager.conf
         line: dns=default
         insertafter: '\[main\]'
+      listen: enable default dns
     - name: remove resolv.conf
       file:
         dest: /etc/resolv.conf
         state: absent
+      listen: enable default dns
     - name: restart network-manager
       systemd:
         name: network-manager
         state: restarted
+      listen: enable default dns
+    - name: wait for dns
+      wait_for:
+        host: google.com
+        port: 80
+        timeout: 60
+      listen: enable default dns
   tasks:
     - name: disable systemd-resolved service
       systemd:
@@ -26,16 +35,9 @@
         state: stopped
         enabled: false
       notify:
-        - use dns network-manager
-        - remove resolv.conf
-        - restart network-manager
+        - enable default dns
     - name: flush handlers
       meta: flush_handlers
-    - name: wait for dns
-      wait_for:
-        host: google.com
-        port: 80
-        timeout: 60
     - name: allow nopasswd sudo
       lineinfile:
         dest: /etc/sudoers
