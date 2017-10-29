@@ -10,9 +10,11 @@
       lineinfile:
         dest: /etc/NetworkManager/NetworkManager.conf
         line: dns=default
-        insertafter: "^[main]"
-    - name: unlink resolv.conf
-      shell: unlink /etc/resolv.conf
+        insertafter: '\[main\]'
+    - name: remove resolv.conf
+      file:
+        dest: /etc/resolv.conf
+        state: absent
     - name: restart network-manager
       systemd:
         name: network-manager
@@ -25,10 +27,15 @@
         enabled: false
       notify:
         - use dns network-manager
-        - unlink resolv.conf
+        - remove resolv.conf
         - restart network-manager
     - name: flush handlers
       meta: flush_handlers
+    - name: wait for dns
+      wait_for:
+        host: google.com
+        port: 80
+        timeout: 60
     - name: allow nopasswd sudo
       lineinfile:
         dest: /etc/sudoers
