@@ -88,9 +88,15 @@
         - remmina-plugin-rdp
         - remmina-plugin-gnome
         - freerdp-x11
+    - name: check mattermost package
+      shell: dpkg-query -l mattermost-desktop
+      register: mattermost
+      failed_when: false
+      changed_when: false
     - name: mattermost package
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
+      when: mattermost.rc != 0
     - name: mike shell
       user:
         name: mike
