@@ -99,6 +99,7 @@
         - gnome-tweak-tool
         - default-jre
         - keepass2
+        - virtualenv
     - name: check mattermost package
       shell: dpkg-query -l mattermost-desktop
       register: mattermost
