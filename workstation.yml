@@ -47,6 +47,7 @@
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
         validate: '/usr/sbin/visudo -cf %s'
     - name: apt keys
+      tags: packages
       apt_key:
         url: "{{ item }}"
         state: present
@@ -54,10 +55,12 @@
         - https://www.virtualbox.org/download/oracle_vbox_2016.asc
         - https://www.virtualbox.org/download/oracle_vbox.asc
     - name: dropbox apt key
+      tags: packages
       apt_key:
         id: 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
         keyserver: pgp.mit.edu
     - name: apt repositories
+      tags: packages
       apt_repository:
         repo: "{{ item }}"
         update_cache: false
@@ -67,10 +70,12 @@
         - deb http://download.virtualbox.org/virtualbox/debian zesty contrib
         - deb http://linux.dropbox.com/ubuntu xenial main
     - name: update apt cache
+      tags: packages
       apt:
         update_cache: true
       changed_when: false
     - name: workstation packages
+      tags: packages
       apt:
         name: "{{ item }}"
         state: present
@@ -102,11 +107,13 @@
         - virtualenv
         - gstreamer1.0-libav
     - name: check mattermost package
+      tags: packages
       shell: dpkg-query -l mattermost-desktop
       register: mattermost
       failed_when: false
       changed_when: false
     - name: mattermost package
+      tags: packages
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
       when: mattermost.rc != 0
