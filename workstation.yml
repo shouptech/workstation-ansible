@@ -94,6 +94,7 @@
         - remmina-plugin-gnome
         - freerdp-x11
         - dropbox
+        - gnome-tweak-tool
     - name: check mattermost package
       shell: dpkg-query -l mattermost-desktop
       register: mattermost
