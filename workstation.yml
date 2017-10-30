@@ -100,6 +100,7 @@
         - default-jre
         - keepass2
         - virtualenv
+        - gstreamer1.0-libav
     - name: check mattermost package
       shell: dpkg-query -l mattermost-desktop
       register: mattermost
