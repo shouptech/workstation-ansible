@@ -106,6 +106,7 @@
         - keepass2
         - virtualenv
         - gstreamer1.0-libav
+        - docker.io
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
