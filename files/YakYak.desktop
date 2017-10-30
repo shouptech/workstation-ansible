@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Name=YakYak
+GenericName=YakYak
+Comment=Chat client for Google Hangouts
+Path=/opt/yakyak-linux-x64
+Exec=/opt/yakyak-linux-x64/yakyak
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=true
+Icon=/opt/yakyak-linux-x64/resources/app/icons/yakyak-logo.svg
+Name[en_US]=YakYak
+Categories=Network;WebBrowser;
