@@ -108,6 +108,7 @@
         - gstreamer1.0-libav
         - docker.io
         - evolution
+        - evolution-ews
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
