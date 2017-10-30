@@ -98,6 +98,7 @@
         - dropbox
         - gnome-tweak-tool
         - default-jre
+        - keepass2
     - name: check mattermost package
       shell: dpkg-query -l mattermost-desktop
       register: mattermost
