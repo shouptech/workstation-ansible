@@ -130,7 +130,7 @@
       when: mattermost.rc != 0
     - name: local user shell
       user:
-        name: "{{ ansible_env.USER }}"
+        name: "{{ ansible_env.SUDO_USER }}"
         shell: /usr/bin/zsh
     - name: check yakyak directory
       stat:
@@ -152,7 +152,7 @@
         src: files/YakYak.desktop
         dest: /usr/share/applications/YakYak.desktop
 
-# Tasks to be done as "{{ ansible_env.USER }}"
+# Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
   vars:
     ansible_become: false
