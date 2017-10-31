@@ -92,6 +92,8 @@
         - network-manager-openconnect-gnome
         - network-manager-l2tp
         - network-manager-l2tp-gnome
+        - network-manager-openvpn
+        - network-manager-openvpn-gnome
         - virtualbox-5.2
         - dkms
         - mesa-utils
