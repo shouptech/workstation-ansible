@@ -116,6 +116,7 @@
         - ubuntu-vm-builder
         - bridge-utils
         - virt-manager
+        - gimp
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
