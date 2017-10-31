@@ -127,9 +127,9 @@
       apt:
         deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
       when: mattermost.rc != 0
-    - name: mike shell
+    - name: local user shell
       user:
-        name: mike
+        name: "{{ ansible_env.USER }}"
         shell: /usr/bin/zsh
     - name: check yakyak directory
       stat:
@@ -151,7 +151,7 @@
         src: files/YakYak.desktop
         dest: /usr/share/applications/YakYak.desktop
 
-# Tasks to be done as mike
+# Tasks to be done as "{{ ansible_env.USER }}"
 - hosts: localhost
   vars:
     ansible_become: false
@@ -169,8 +169,8 @@
         repo: git://github.com/robbyrussell/oh-my-zsh.git
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
     - name: copy zshrc
-      copy:
-        src: files/zshrc
+      template:
+        src: files/zshrc.j2
         dest: "{{ ansible_env.HOME }}/.zshrc"
     - name: oh-my-zsh custom theme directory
       file:
