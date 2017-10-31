@@ -111,6 +111,11 @@
         - docker.io
         - evolution
         - evolution-ews
+        - qemu-kvm
+        - libvirt-bin
+        - ubuntu-vm-builder
+        - bridge-utils
+        - virt-manager
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
