@@ -117,6 +117,7 @@
         - bridge-utils
         - virt-manager
         - gimp
+        - ssh-askpass-fullscreen
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
