@@ -119,6 +119,7 @@
         - gimp
         - ssh-askpass-fullscreen
         - npm
+        - awscli
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
