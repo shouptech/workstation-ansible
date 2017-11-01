@@ -118,6 +118,7 @@
         - virt-manager
         - gimp
         - ssh-askpass-fullscreen
+        - npm
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
