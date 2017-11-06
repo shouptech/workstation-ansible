@@ -120,6 +120,7 @@
         - ssh-askpass-fullscreen
         - npm
         - awscli
+        - virtualenvwrapper
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
