@@ -122,6 +122,9 @@
         - awscli
         - virtualenvwrapper
         - nmap
+        - jq
+        - python-boto
+        - python3-boto
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
