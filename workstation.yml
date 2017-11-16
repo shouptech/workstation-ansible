@@ -70,7 +70,7 @@
         - 'ppa:webupd8team/atom'
         - deb http://download.virtualbox.org/virtualbox/debian zesty contrib
         - deb http://linux.dropbox.com/ubuntu xenial main
-        #- deb https://atlassian.artifactoryonline.com/atlassian/hipchat-apt-client zesty main
+        - deb https://atlassian.artifactoryonline.com/atlassian/hipchat-apt-client zesty main
     - name: update apt cache
       tags: packages
       apt:
@@ -127,7 +127,7 @@
         - jq
         - python-boto
         - python3-boto
-        #- hipchat4
+        - hipchat4
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
