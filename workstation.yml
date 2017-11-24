@@ -127,6 +127,7 @@
         - jq
         - python-boto
         - python3-boto
+        - xournal
         #- hipchat4
     - name: check mattermost package
       tags: packages
