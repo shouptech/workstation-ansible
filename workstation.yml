@@ -30,6 +30,10 @@
         port: 80
         timeout: 60
       listen: enable default dns
+    - name: restart autofs
+      service:
+        name: autofs
+        state: restarted
   tasks:
     - name: disable systemd-resolved service
       systemd:
@@ -128,6 +132,8 @@
         - python-boto
         - python3-boto
         - xournal
+        - nfs-common
+        - autofs
         #- hipchat4
     - name: check mattermost package
       tags: packages
@@ -163,6 +169,17 @@
       copy:
         src: files/YakYak.desktop
         dest: /usr/share/applications/YakYak.desktop
+    - name: autofs enable
+      lineinfile:
+        dest: /etc/auto.master
+        regexp: '^#/net'
+        line: '/net   -hosts'
+      notify:
+        - restart autofs
+    - name: enable autofs service
+      service:
+        name: autofs
+        enabled: yes
 
 # Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
