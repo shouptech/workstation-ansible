@@ -1,0 +1,25 @@
+---
+# Tasks for powershell
+- hosts: localhost
+  vars:
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_user: root
+  tasks:
+    - name: apt key for microsoft
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+        validate_certs: false
+    - name: microsoft repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://packages.microsoft.com/ubuntu/17.04/prod zesty main"
+        update_cache: false
+    - name: update apt cache
+      apt:
+        update_cache: true
+      changed_when: false
+    - name: install powershell
+      apt:
+        name: powershell
+        state: present
