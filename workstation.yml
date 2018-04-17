@@ -176,6 +176,7 @@
         dest: /etc/auto.master
         regexp: '^#/net'
         line: '/net   -hosts'
+        backrefs: true
       notify:
         - restart autofs
     - name: enable autofs service
