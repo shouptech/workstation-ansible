@@ -6,7 +6,7 @@
     ansible_become_method: sudo
     ansible_become_user: root
     yakyak_destination: /opt/yakyak-linux-x64
-    yakyak_url: https://github.com/yakyak/yakyak/releases/download/v1.4.3/yakyak-1.4.3-linux-x64.tar.gz
+    yakyak_url: https://github.com/yakyak/yakyak/releases/download/v1.5.0/yakyak-1.5.0-linux-x64.tar.gz
   handlers:
     - name: config NetworkManger.conf for default dns
       lineinfile:
@@ -159,6 +159,7 @@
         src: "{{ yakyak_url }}"
         dest: /opt
         remote_src: true
+        validate_certs: false
       when: not yakyak_installed.stat.exists
     - name: symlink yakyak bin
       file:
