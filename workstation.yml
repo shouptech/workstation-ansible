@@ -134,6 +134,7 @@
         - xournal
         - nfs-common
         - autofs
+        - cowsay
         #- hipchat4
     - name: check mattermost package
       tags: packages
