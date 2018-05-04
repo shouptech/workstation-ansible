@@ -98,3 +98,7 @@ source $(which aws_zsh_completer.sh)
 
 # Ansible cow
 export ANSIBLE_COW_SELECTION=tux
+
+# Docker tab completion
+fpath=(~/.zsh/completion $fpath)
+autoload -Uz compinit && compinit -i

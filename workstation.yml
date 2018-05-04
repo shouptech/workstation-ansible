@@ -201,6 +201,14 @@
       git:
         repo: git://github.com/robbyrussell/oh-my-zsh.git
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+    - name: .zsh directory
+      file:
+        dest: "{{ ansible_env.HOME }}/.zsh"
+        state: directory
+    - name: download docker tab completion
+      get_url:
+        url: https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker
+        dest: "{{ ansible_env.HOME }}/.zsh"
     - name: copy zshrc
       template:
         src: files/zshrc.j2
