@@ -94,11 +94,12 @@ source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 # Editor
 export EDITOR=vim
 
-source $(which aws_zsh_completer.sh)
-
 # Ansible cow
 export ANSIBLE_COW_SELECTION=tux
 
 # Docker tab completion
 fpath=(~/.zsh/completion $fpath)
 autoload -Uz compinit && compinit -i
+
+#AWS Tab completion
+source $(which aws_zsh_completer.sh)

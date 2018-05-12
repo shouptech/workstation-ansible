@@ -72,9 +72,8 @@
       with_items:
         - 'ppa:nextcloud-devs/client'
         - 'ppa:webupd8team/atom'
-        - deb http://download.virtualbox.org/virtualbox/debian zesty contrib
+        - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
         - deb http://linux.dropbox.com/ubuntu xenial main
-        #- deb https://atlassian.artifactoryonline.com/atlassian/hipchat-apt-client zesty main
     - name: update apt cache
       tags: packages
       apt:
@@ -106,7 +105,6 @@
         - whois
         - remmina
         - remmina-plugin-rdp
-        - remmina-plugin-gnome
         - freerdp-x11
         - dropbox
         - gnome-tweak-tool
@@ -135,7 +133,6 @@
         - nfs-common
         - autofs
         - cowsay
-        #- hipchat4
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
@@ -183,12 +180,26 @@
       service:
         name: autofs
         enabled: yes
+    - name: add user to docker group
+      user:
+        name: "{{ ansible_env.SUDO_USER }}"
+        groups: docker
+        append: yes
 
 # Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
   vars:
     ansible_become: false
   tasks:
+    - name: home bin dir
+      file:
+        dest: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+    - name: download aws zsh completion
+      get_url:
+        url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh
+        dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
+        mode: 0755
     - name: copy vimrc
       copy:
         src: files/vimrc
