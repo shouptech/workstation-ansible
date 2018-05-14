@@ -137,6 +137,7 @@
         - cowsay
         - apt-transport-https
         - kubectl
+        - pwgen
     - name: slack package
       tags: packages
       apt:
