@@ -204,6 +204,11 @@
       file:
         dest: "{{ ansible_env.HOME }}/.local/bin"
         state: directory
+    - name: minikube
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
+        mode: 0755
     - name: download aws zsh completion
       get_url:
         url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh

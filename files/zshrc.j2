@@ -108,3 +108,7 @@ source $(which aws_zsh_completer.sh)
 if [ $commands[kubectl] ]; then
   source <(kubectl completion zsh)
 fi
+
+if [ $commands[minikube] ]; then
+  source <(minikube completion zsh)
+fi
