@@ -197,6 +197,7 @@
 
 # Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
+  tags: local_user
   vars:
     ansible_become: false
   tasks:
@@ -207,7 +208,7 @@
     - name: minikube
       get_url:
         url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
+        dest: "{{ ansible_env.HOME }}/.local/bin/minikube"
         mode: 0755
     - name: download aws zsh completion
       get_url:
