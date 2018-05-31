@@ -252,3 +252,15 @@
       pip:
         name: awsebcli
         extra_args: --user
+    - name: aws config directory
+      file:
+        dest: "{{ ansible_env.HOME }}/.aws"
+        state: directory
+    - name: copy aws config
+      copy:
+        src: files/aws/config
+        dest: "{{ ansible_env.HOME }}/.aws/config"
+    - name: copy aws credentials
+      copy:
+        src: files/aws/credentials
+        dest: "{{ ansible_env.HOME }}/.aws/credentials"
