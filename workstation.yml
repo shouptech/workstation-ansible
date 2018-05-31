@@ -138,6 +138,7 @@
         - apt-transport-https
         - kubectl
         - pwgen
+        - python-pip
     - name: slack package
       tags: packages
       apt:
@@ -247,3 +248,7 @@
       copy:
         src: files/gentoo-mod.zsh-theme
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
+    - name: install awsebcli
+      pip:
+        name: awsebcli
+        extra_args: --user
