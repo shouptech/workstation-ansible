@@ -12,7 +12,7 @@ function kube_prompt {
   fi
 }
 
-local ret_status="%(?:%{$fg_bold[green]%}✔:%{$fg_bold[red]%}!)"
+local ret_status="%(?:%{$fg_bold[green]%}✔:%{$fg_bold[red]%}✗)"
 
 PROMPT='${ret_status} %{$fg_bold[blue]%}%(!.%1~.%~) $(git_prompt_info)%_$(kube_prompt)
 %(!.%{$fg_bold[red]%}.%{$fg_bold[green]%}%n@)%m $(prompt_char)%{$reset_color%} '
