@@ -139,10 +139,11 @@
         - kubectl
         - pwgen
         - python-pip
+        - golang
     - name: slack package
       tags: packages
       apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.2.0-beta25a7a50e-amd64.deb
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.2.1-amd64.deb
     - name: check mattermost package
       tags: packages
       shell: dpkg-query -l mattermost-desktop
@@ -152,7 +153,7 @@
     - name: mattermost package
       tags: packages
       apt:
-        deb: https://releases.mattermost.com/desktop/3.7.1/mattermost-desktop-3.7.1-linux-amd64.deb
+        deb: https://releases.mattermost.com/desktop/4.1.2/mattermost-desktop-4.1.2-linux-amd64.deb
       when: mattermost.rc != 0
     - name: local user shell
       user:
