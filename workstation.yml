@@ -60,11 +60,11 @@
         - https://www.virtualbox.org/download/oracle_vbox.asc
         - https://packages.cloud.google.com/apt/doc/apt-key.gpg
         #- https://atlassian.artifactoryonline.com/atlassian/api/gpg/key/public
-    - name: dropbox apt key
-      tags: packages
-      apt_key:
-        id: 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
-        keyserver: pgp.mit.edu
+    #- name: dropbox apt key
+    #  tags: packages
+    #  apt_key:
+    #    id: 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
+    #    keyserver: pgp.mit.edu
     - name: apt repositories
       tags: packages
       apt_repository:
@@ -74,7 +74,7 @@
         - 'ppa:nextcloud-devs/client'
         - 'ppa:webupd8team/atom'
         - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
-        - deb http://linux.dropbox.com/ubuntu xenial main
+        #- deb http://linux.dropbox.com/ubuntu xenial main
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
     - name: update apt cache
       tags: packages
@@ -108,7 +108,7 @@
         - remmina
         - remmina-plugin-rdp
         - freerdp-x11
-        - dropbox
+        #- dropbox
         - gnome-tweak-tool
         - default-jre
         - keepass2
