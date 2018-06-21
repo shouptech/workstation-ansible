@@ -265,3 +265,11 @@
       copy:
         src: files/aws/credentials
         dest: "{{ ansible_env.HOME }}/.aws/credentials"
+    - name: atom config directory
+      file:
+        dest: "{{ ansible_env.HOME }}/.atom"
+        state: directory
+    - name: copy atom config
+      copy:
+        src: files/atom-config.cson
+        dest: "{{ ansible_env.HOME }}/.atom/config.cson"
