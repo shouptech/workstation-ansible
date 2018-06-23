@@ -88,6 +88,10 @@ if [[ -d ~/.local/bin ]]; then
     export PATH=~/.local/bin:$PATH
 fi
 
+if [[ -d ~/go ]]; then
+    export GOPATH=$HOME/go
+fi
+
 if [[ -d ~/go/bin ]]; then
     export PATH=~/go/bin:$PATH
 fi
