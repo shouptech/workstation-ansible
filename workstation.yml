@@ -78,6 +78,7 @@
         #- deb http://linux.dropbox.com/ubuntu xenial main
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
         - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
+        - deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
     - name: update apt cache
       tags: packages
       apt:
@@ -144,6 +145,7 @@
         - golang
         - dotnet-sdk-2.1
         - aspnetcore-runtime-2.1
+        - code
     - name: slack package
       tags: packages
       apt:
