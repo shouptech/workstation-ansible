@@ -78,7 +78,12 @@
         #- deb http://linux.dropbox.com/ubuntu xenial main
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
         - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
-        - deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main
+    - name: apt vscode repo
+      tags: packages
+      apt_repository:
+        repo: deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main
+        update_cache: false
+        filename: vscode
     - name: update apt cache
       tags: packages
       apt:
