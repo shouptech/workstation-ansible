@@ -60,12 +60,6 @@
         - https://www.virtualbox.org/download/oracle_vbox.asc
         - https://packages.cloud.google.com/apt/doc/apt-key.gpg
         - https://packages.microsoft.com/keys/microsoft.asc
-        #- https://atlassian.artifactoryonline.com/atlassian/api/gpg/key/public
-    #- name: dropbox apt key
-    #  tags: packages
-    #  apt_key:
-    #    id: 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
-    #    keyserver: pgp.mit.edu
     - name: apt repositories
       tags: packages
       apt_repository:
@@ -75,7 +69,6 @@
         - 'ppa:nextcloud-devs/client'
         - 'ppa:webupd8team/atom'
         - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
-        #- deb http://linux.dropbox.com/ubuntu xenial main
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
         - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
     - name: apt vscode repo
@@ -98,11 +91,9 @@
         - vim
         - ansible
         - terminator
-        - atom
         - zsh
         - nextcloud-client
         - fonts-hack-web
-        - gnome-shell-extension-appindicator # Adds tray icons, still needs to be enabled
         - network-manager-openconnect
         - network-manager-openconnect-gnome
         - network-manager-l2tp
@@ -116,18 +107,13 @@
         - remmina
         - remmina-plugin-rdp
         - freerdp-x11
-        #- dropbox
-        - gnome-tweak-tool
         - default-jre
         - keepass2
         - virtualenv
         - gstreamer1.0-libav
         - docker.io
-        - evolution
-        - evolution-ews
         - qemu-kvm
         - libvirt-bin
-        - ubuntu-vm-builder
         - bridge-utils
         - virt-manager
         - gimp
@@ -148,48 +134,15 @@
         - pwgen
         - python-pip
         - golang
-        - dotnet-sdk-2.1
-        - aspnetcore-runtime-2.1
         - code
     - name: slack package
       tags: packages
       apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.2.1-amd64.deb
-    - name: check mattermost package
-      tags: packages
-      shell: dpkg-query -l mattermost-desktop
-      register: mattermost
-      failed_when: false
-      changed_when: false
-    - name: mattermost package
-      tags: packages
-      apt:
-        deb: https://releases.mattermost.com/desktop/4.1.2/mattermost-desktop-4.1.2-linux-amd64.deb
-      when: mattermost.rc != 0
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.3.7-amd64.deb
     - name: local user shell
       user:
         name: "{{ ansible_env.SUDO_USER }}"
         shell: /usr/bin/zsh
-    - name: check yakyak directory
-      stat:
-        path: "{{ yakyak_destination }}"
-      register: yakyak_installed
-    - name: untar yakyak
-      unarchive:
-        src: "{{ yakyak_url }}"
-        dest: /opt
-        remote_src: true
-        validate_certs: false
-      when: not yakyak_installed.stat.exists
-    - name: symlink yakyak bin
-      file:
-        src: /opt/yakyak-linux-x64/yakyak
-        dest: /usr/local/bin/yakyak
-        state: link
-    - name: yakyak desktop icon
-      copy:
-        src: files/YakYak.desktop
-        dest: /usr/share/applications/YakYak.desktop
     - name: autofs enable
       lineinfile:
         dest: /etc/auto.master
@@ -260,15 +213,3 @@
       copy:
         src: files/gentoo-mod.zsh-theme
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
-    - name: install awsebcli
-      pip:
-        name: awsebcli
-        extra_args: --user
-    - name: atom config directory
-      file:
-        dest: "{{ ansible_env.HOME }}/.atom"
-        state: directory
-    - name: copy atom config
-      copy:
-        src: files/atom-config.cson
-        dest: "{{ ansible_env.HOME }}/.atom/config.cson"
