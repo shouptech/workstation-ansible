@@ -67,7 +67,6 @@
         update_cache: false
       with_items:
         - 'ppa:nextcloud-devs/client'
-        - 'ppa:webupd8team/atom'
         - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
         - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
@@ -108,10 +107,10 @@
         - remmina-plugin-rdp
         - freerdp-x11
         - default-jre
-        - keepass2
         - virtualenv
         - gstreamer1.0-libav
         - docker.io
+        - docker-compose
         - qemu-kvm
         - libvirt-bin
         - bridge-utils
@@ -138,7 +137,7 @@
     - name: slack package
       tags: packages
       apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.3.7-amd64.deb
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb
     - name: local user shell
       user:
         name: "{{ ansible_env.SUDO_USER }}"
@@ -181,6 +180,11 @@
         url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh
         dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
         mode: 0755
+    - name: download aws-iam-authenticator
+      get_url:
+        url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
+        dest: "{{ ansible_env.HOME }}/.local/bin/aws-iam-authenticator"
+        mode: 0755
     - name: copy vimrc
       copy:
         src: files/vimrc
@@ -213,3 +217,16 @@
       copy:
         src: files/gentoo-mod.zsh-theme
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
+    - name: .kube directory
+      file:
+        dest: "{{ ansible_env.HOME}}/.kube"
+        state: directory
+    - name: copy kube config files
+      copy:
+        src: "files/kube/{{ item }}"
+        dest: "{{ ansible_env.HOME}}/.kube/{{ item }}"
+      with_items:
+        - dev-eks
+        - qa-eks
+        - uat-eks
+        - prod-eks01
