@@ -5,8 +5,10 @@
     ansible_become: true
     ansible_become_method: sudo
     ansible_become_user: root
-    yakyak_destination: /opt/yakyak-linux-x64
-    yakyak_url: https://github.com/yakyak/yakyak/releases/download/v1.5.0/yakyak-1.5.0-linux-x64.tar.gz
+
+  roles:
+    - gantsign.golang
+
   handlers:
     - name: config NetworkManger.conf for default dns
       lineinfile:
@@ -34,6 +36,7 @@
       service:
         name: autofs
         state: restarted
+
   tasks:
     - name: disable systemd-resolved service
       systemd:
@@ -132,12 +135,11 @@
         - kubectl
         - pwgen
         - python-pip
-        - golang
         - code
     - name: slack package
       tags: packages
       apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-3.4.2-amd64.deb
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.0.1-amd64.deb
     - name: local user shell
       user:
         name: "{{ ansible_env.SUDO_USER }}"

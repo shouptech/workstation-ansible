@@ -114,11 +114,11 @@ source $(which aws_zsh_completer.sh)
 
 # kubectl tab completion
 if [ $commands[kubectl] ]; then
-  source <(kubectl completion zsh)
+    source <(kubectl completion zsh)
 fi
 
 if [ $commands[minikube] ]; then
-  source <(minikube completion zsh)
+    source <(minikube completion zsh)
 fi
 
 alias aws-login='eval $(aws_assume_role.sh)'
@@ -128,3 +128,7 @@ alias uat-eks="source ~/.zshrc; export PS1='(k8s: uat-eks) $PS1'; export KUBECON
 alias prod-eks01="source ~/.zshrc; export PS1='(k8s: prod-eks01) $PS1'; export KUBECONFIG=~/.kube/prod-eks01"
 alias prod-s24="source ~/.zshrc; export PS1='(k8s: prod-s24) $PS1'; export KUBECONFIG=~/.kube/prod-s24"
 alias kubeoff="unset KUBECONFIG; source ~/.zshrc"
+
+if [[ -d /opt/go/{{ golang_version }}/bin ]]; then
+    export PATH=/opt/go/{{ golang_version }}/bin:$PATH
+fi
