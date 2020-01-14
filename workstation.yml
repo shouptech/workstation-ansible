@@ -62,7 +62,6 @@
         - https://www.virtualbox.org/download/oracle_vbox_2016.asc
         - https://www.virtualbox.org/download/oracle_vbox.asc
         - https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        - https://packages.microsoft.com/keys/microsoft.asc
     - name: apt repositories
       tags: packages
       apt_repository:
@@ -73,12 +72,6 @@
         - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
         - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
-    - name: apt vscode repo
-      tags: packages
-      apt_repository:
-        repo: deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main
-        update_cache: false
-        filename: vscode
     - name: update apt cache
       tags: packages
       apt:
@@ -102,7 +95,7 @@
         - network-manager-l2tp-gnome
         - network-manager-openvpn
         - network-manager-openvpn-gnome
-        - virtualbox-5.2
+        - virtualbox-6.1
         - dkms
         - mesa-utils
         - whois
@@ -135,11 +128,15 @@
         - kubectl
         - pwgen
         - python-pip
-        - code
+        - ruby-full
+    - name: vscodium package
+      tags: packages
+      apt:
+        deb: https://github.com/VSCodium/vscodium/releases/download/1.41.1/codium_1.41.1-1576787344_amd64.deb
     - name: slack package
       tags: packages
       apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.0.1-amd64.deb
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.2.0-amd64.deb
     - name: local user shell
       user:
         name: "{{ ansible_env.SUDO_USER }}"
@@ -232,3 +229,12 @@
         - qa-eks
         - uat-eks
         - prod-eks01
+    - name: ruby gems
+      gem:
+        name: cfn-nag
+        state: present
+        user_install: yes
+    - name: copy npmrc
+      template:
+        src: files/npmrc.j2
+        dest: "{{ ansible_env.HOME }}/.npmrc"
