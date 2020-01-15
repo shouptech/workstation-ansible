@@ -8,6 +8,7 @@
 
   roles:
     - gantsign.golang
+    - geerlingguy.nodejs
 
   handlers:
     - name: config NetworkManger.conf for default dns
@@ -113,7 +114,6 @@
         - virt-manager
         - gimp
         - ssh-askpass-fullscreen
-        - npm
         - awscli
         - virtualenvwrapper
         - nmap
@@ -231,9 +231,11 @@
         - prod-eks01
     - name: ruby gems
       gem:
-        name: cfn-nag
+        name: "{{ item }}"
         state: present
         user_install: yes
+      with_items:
+        - cfn-nag
     - name: copy npmrc
       template:
         src: files/npmrc.j2
