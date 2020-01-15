@@ -17,26 +17,35 @@
         line: dns=default
         insertafter: '\[main\]'
       listen: enable default dns
+
     - name: remove resolv.conf
       file:
         dest: /etc/resolv.conf
         state: absent
       listen: enable default dns
+
     - name: restart network-manager
       systemd:
         name: network-manager
         state: restarted
       listen: enable default dns
+
     - name: wait for dns
       wait_for:
         host: google.com
         port: 80
         timeout: 60
       listen: enable default dns
+
     - name: restart autofs
       service:
         name: autofs
         state: restarted
+
+    - name: remove temp directory
+      file:
+        state: absent
+        path: "{{ temp_directory.path }}"
 
   tasks:
     - name: disable systemd-resolved service
@@ -46,23 +55,28 @@
         enabled: false
       notify:
         - enable default dns
+
     - name: flush handlers
       meta: flush_handlers
+
     - name: allow nopasswd sudo
       lineinfile:
         dest: /etc/sudoers
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
         validate: '/usr/sbin/visudo -cf %s'
+
     - name: apt keys
       tags: packages
       apt_key:
         url: "{{ item }}"
         state: present
+
       with_items:
         - https://www.virtualbox.org/download/oracle_vbox_2016.asc
         - https://www.virtualbox.org/download/oracle_vbox.asc
         - https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
     - name: apt repositories
       tags: packages
       apt_repository:
@@ -73,11 +87,13 @@
         - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
         - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
+
     - name: update apt cache
       tags: packages
       apt:
         update_cache: true
       changed_when: false
+
     - name: workstation packages
       tags: packages
       apt:
@@ -129,18 +145,30 @@
         - pwgen
         - python-pip
         - ruby-full
+        - unzip
+
+    - name: Temp dir for download
+      tempfile:
+        state: directory
+      register: temp_directory
+      notify: remove temp directory
+      tags: opcli
+
     - name: vscodium package
       tags: packages
       apt:
         deb: https://github.com/VSCodium/vscodium/releases/download/1.41.1/codium_1.41.1-1576787344_amd64.deb
+
     - name: slack package
       tags: packages
       apt:
         deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.2.0-amd64.deb
+
     - name: local user shell
       user:
         name: "{{ ansible_env.SUDO_USER }}"
         shell: /usr/bin/zsh
+
     - name: autofs enable
       lineinfile:
         dest: /etc/auto.master
@@ -149,15 +177,52 @@
         backrefs: true
       notify:
         - restart autofs
+
     - name: enable autofs service
       service:
         name: autofs
         enabled: yes
+
     - name: add user to docker group
       user:
         name: "{{ ansible_env.SUDO_USER }}"
         groups: docker
         append: yes
+
+    - name: Check installed 1Password version
+      shell: /usr/local/bin/op --version
+      register: op_install_check
+      changed_when: no
+      failed_when: no
+      tags: opcli
+
+    - name: Download OP zip
+      get_url:
+        url: "https://cache.agilebits.com/dist/1P/op/pkg/v{{ opcli_version }}/op_linux_amd64_v{{ opcli_version }}.zip"
+        dest: "{{ temp_directory.path }}/op.zip"
+        checksum: "sha256:{{ opcli_sha256 }}"
+      when: op_install_check.stdout.find(opcli_version) == -1
+      tags: opcli
+
+    - name: Unzip OP
+      unarchive:
+        src: "{{ temp_directory.path }}/op.zip"
+        dest: "{{ temp_directory.path }}"
+        remote_src: yes
+      when: op_install_check.stdout.find(opcli_version) == -1
+      tags: opcli
+
+    - name: Copy OP Binary
+      copy:
+        src: "{{ temp_directory.path }}/op"
+        dest: /usr/local/bin/op
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
+      when: op_install_check.stdout.find(opcli_version) == -1
+      tags: opcli
+
 
 # Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
@@ -169,57 +234,70 @@
       file:
         dest: "{{ ansible_env.HOME }}/.local/bin"
         state: directory
+
     - name: minikube
       get_url:
         url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
         dest: "{{ ansible_env.HOME }}/.local/bin/minikube"
         mode: 0755
+
     - name: download aws zsh completion
       get_url:
         url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh
         dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
         mode: 0755
+
     - name: download aws-iam-authenticator
       get_url:
         url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
         dest: "{{ ansible_env.HOME }}/.local/bin/aws-iam-authenticator"
         mode: 0755
+
     - name: copy vimrc
       copy:
         src: files/vimrc
         dest: "{{ ansible_env.HOME }}/.vimrc"
+
     - name: copy terminator config
       copy:
         src: files/terminator
         dest: "{{ ansible_env.HOME }}/.config"
+
     - name: install oh-my-zsh
       git:
         repo: git://github.com/robbyrussell/oh-my-zsh.git
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
     - name: .zsh directory
       file:
         dest: "{{ ansible_env.HOME }}/.zsh"
         state: directory
+
     - name: download docker tab completion
       get_url:
         url: https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker
         dest: "{{ ansible_env.HOME }}/.zsh"
+
     - name: copy zshrc
       template:
         src: files/zshrc.j2
         dest: "{{ ansible_env.HOME }}/.zshrc"
+
     - name: oh-my-zsh custom theme directory
       file:
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
         state: directory
+
     - name: copy custom theme
       copy:
         src: files/gentoo-mod.zsh-theme
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
+
     - name: .kube directory
       file:
         dest: "{{ ansible_env.HOME}}/.kube"
         state: directory
+
     - name: copy kube config files
       copy:
         src: "files/kube/{{ item }}"
@@ -229,6 +307,7 @@
         - qa-eks
         - uat-eks
         - prod-eks01
+
     - name: ruby gems
       gem:
         name: "{{ item }}"
@@ -236,6 +315,7 @@
         user_install: yes
       with_items:
         - cfn-nag
+
     - name: copy npmrc
       template:
         src: files/npmrc.j2
