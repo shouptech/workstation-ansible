@@ -147,6 +147,12 @@
         - ruby-full
         - unzip
 
+    - name: Fluxctl
+      snap:
+        name: fluxctl
+        classic: yes
+        state: present
+
     - name: Temp dir for download
       tempfile:
         state: directory
