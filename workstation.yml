@@ -229,6 +229,15 @@
       when: op_install_check.stdout.find(opcli_version) == -1
       tags: opcli
 
+    - name: kubeseal binary
+      get_url:
+        url: https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.9.7/kubeseal-linux-amd64
+        dest: /usr/local/bin/kubeseal
+        sha256sum: 98e5a617fb1d3e9a9ab37c52c09fd9f8ad651122ad2d00b1388dab47de07bac5
+        mode: 0755
+        owner: root
+        group: root
+
 
 # Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
