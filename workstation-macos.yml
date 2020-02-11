@@ -1,0 +1,81 @@
+---
+# Tasks to be done as root
+- hosts: localhost
+  vars:
+    ansible_become: true
+    ansible_become_method: sudo
+    ansible_become_user: root
+
+  tasks:
+    - name: local user shell
+      user:
+        name: "{{ ansible_env.SUDO_USER }}"
+        shell: /bin/zsh
+
+# Tasks to be done as local user
+- hosts: localhost
+  tags: local_user
+  vars:
+    ansible_become: false
+
+  tasks:
+    - name: home bin dir
+      file:
+        dest: "{{ ansible_env.HOME }}/.local/bin"
+        state: directory
+
+    - name: Brew install
+      homebrew:
+        name: 
+          - gnupg
+          - ansible
+          - docker
+          - pyenv-virtualenv
+          - pyenv-virtualenvwrapper
+        state: present
+    
+    - name: Brew cask
+      homebrew_cask:
+        name: vscodium
+        state: present
+
+    - name: download aws zsh completion
+      get_url:
+        url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh
+        dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
+        mode: 0755
+
+    - name: copy vimrc
+      copy:
+        src: files/vimrc
+        dest: "{{ ansible_env.HOME }}/.vimrc"
+
+    - name: install oh-my-zsh
+      git:
+        repo: git://github.com/robbyrussell/oh-my-zsh.git
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
+
+    - name: .zsh directory
+      file:
+        dest: "{{ ansible_env.HOME }}/.zsh"
+        state: directory
+
+    - name: download docker tab completion
+      get_url:
+        url: https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker
+        dest: "{{ ansible_env.HOME }}/.zsh"
+
+    - name: copy zshrc
+      template:
+        src: files/zshrc.j2
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+
+    - name: oh-my-zsh custom theme directory
+      file:
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
+        state: directory
+
+    - name: copy custom theme
+      copy:
+        src: files/gentoo-mod.zsh-theme
+        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
