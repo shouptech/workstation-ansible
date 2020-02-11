@@ -313,16 +313,6 @@
         dest: "{{ ansible_env.HOME}}/.kube"
         state: directory
 
-    - name: copy kube config files
-      copy:
-        src: "files/kube/{{ item }}"
-        dest: "{{ ansible_env.HOME}}/.kube/{{ item }}"
-      with_items:
-        - dev-eks
-        - qa-eks
-        - uat-eks
-        - prod-eks01
-
     - name: ruby gems
       gem:
         name: "{{ item }}"
