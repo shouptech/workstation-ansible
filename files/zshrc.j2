@@ -148,3 +148,70 @@ if [[ -d $HOME/.npm-packages ]]; then
     fi
     export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 fi
+
+# Work aliases
+if [[ "$HOST" =~ "^DEN-(.*)" ]] ; then
+    domainusername=mshoup
+    username=admmshoup
+    key="~/.ssh/id_rsa"
+
+    ###ALIASES###
+    #General Stuff
+    alias nosleep='pmset noidle'
+    alias ll='ls -lAGhp'
+    alias c='clear'
+    alias cp='cp -iv'
+    alias dicker=docker
+
+    #itermocil
+    alias allapp='itermocil app_servers'
+    alias allmq='itermocil mq_workers'
+    alias allsvc='itermocil svc_servers'
+    alias allqa='itermocil qa_servers'
+
+    #QA SSH Shortcuts
+    alias ci0="ssh -i $key $username@10.1.50.24"
+    alias qa0="ssh -i $key $username@10.1.50.54"
+    alias qa1="ssh -i $key $username@10.1.50.55"
+    alias qa2="ssh -i $key $username@10.1.50.56"
+    alias qa3="ssh -i $key $username@10.1.50.57"
+    alias qa4="ssh -i $key $username@10.1.50.58"
+    alias qa5="ssh -i $key $username@10.1.50.53"
+    alias qa6="ssh -i $key $username@10.1.50.41"
+    alias qajenkins="ssh -i $key $username@qajenkins.zenplanner.com"
+
+    #Rabbitmq SSH Shortcuts
+    alias rabbitmq2="ssh -i $key $username@18.234.127.110"
+    alias rabbitmq0="ssh -i $key $username@54.144.212.160"
+    alias rabbitmq1="ssh -i $key $username@54.91.111.233"
+
+    #Hosting Production Servers (Note: key/username necessary as that is handled in ~/.ssh/config)
+    alias app0="ssh 10.129.10.10"
+    alias app1="ssh 10.129.10.11"
+    alias app2="ssh 10.129.10.12"
+    alias app3="ssh 10.129.10.13"
+    alias app4="ssh 10.129.10.14"
+    alias app5="ssh 10.129.10.15"
+    alias app6="ssh 10.129.10.16"
+    alias app7="ssh 10.129.10.17"
+    alias app8="ssh 10.129.10.18"
+    alias app9="ssh 10.129.10.19"
+    alias odin="ssh 10.129.10.8"
+    alias beta0="ssh 10.129.10.20"
+    alias beta1="ssh 10.129.10.21"
+    alias hook0="ssh 10.129.10.24"
+    alias hook1="ssh 10.129.10.25"
+    alias preview0="ssh 10.129.10.26"
+    alias preview1="ssh 10.129.10.27"
+    alias jenkins="ssh 10.129.10.50"
+    alias service0="ssh 10.129.10.37"
+    alias service1="ssh 10.129.10.38"
+
+    #Prod Utility Servers (Monitoring/Jump/etc)
+    alias r6col="ssh 10.129.10.39"
+    alias jump="ssh -i $key $domainusername@10.129.0.129"
+    alias lmcol2="ssh -i $key $username@10.129.6.69"
+
+    export PATH=$HOME/bin:$PATH
+    export PATH=$(brew --prefix openvpn)/sbin:$PATH
+fi
