@@ -26,14 +26,15 @@
 
     - name: Brew install
       homebrew:
-        name: 
+        name:
           - gnupg
           - ansible
           - docker
           - pyenv-virtualenv
           - pyenv-virtualenvwrapper
+          - go
         state: present
-    
+
     - name: Brew cask
       homebrew_cask:
         name: vscodium
