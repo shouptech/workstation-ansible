@@ -145,6 +145,17 @@ if [ $commands[op] ]; then
     alias op.login='eval $(op signin {{ op_profile }})'
 fi
 
+# MacOS Clipboard copy commands
+if [ $commands[pbcopy] ]; then
+    # Personal aliases
+    alias op.my.workmail='op get item "WorkMail AWS" --vault Personal | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
+
+    # ZP aliases
+    alias op.zp.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
+    alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
+    alias op.zp.vaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq jq .details.password -r | tr -d '"'"'\n'"'"' | pbcopy'
+fi
+
 # Work aliases
 if [[ "$HOST" =~ "^DEN-(.*)" ]] ; then
     domainusername=mshoup
