@@ -101,6 +101,8 @@ if [[ -a /usr/local/bin/virtualenvwrapper.sh ]]; then
     source /usr/local/bin/virtualenvwrapper.sh
 elif [[ -a /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]]; then
     source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+elif [[ -a $HOME/Library/Python/3.7/bin/virtualenvwrapper.sh ]]; then
+    source $HOME/Library/Python/3.7/bin/virtualenvwrapper.sh
 fi
 
 # Editor
@@ -226,4 +228,9 @@ if [[ "$HOST" =~ "^DEN-(.*)" ]] ; then
 
     export PATH=$HOME/bin:$PATH
     export PATH=$(brew --prefix openvpn)/sbin:$PATH
+fi
+
+# MacOS pip user location
+if [[ -d "$HOME/Library/Python/3.7" ]] ; then
+    export PATH="$HOME/Library/Python/3.7/bin:$PATH"
 fi

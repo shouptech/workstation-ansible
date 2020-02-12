@@ -74,8 +74,6 @@
           - ansible
           - docker
           - docker-compose
-          - pyenv-virtualenv
-          - pyenv-virtualenvwrapper
           - go
           - packer
           - saml2aws
@@ -85,16 +83,30 @@
           - aws-iam-authenticator
           - rbenv
           - ruby-build
-          - python3
           - node
         state: present
+
+    - name: Default to python3
+      file:
+        path: /usr/local/bin/python
+        src: /usr/local/bin/python3
+        state: link
 
     - name: Brew cask
       homebrew_cask:
         name:
           - vscodium
           - vagrant
+          - mysqlworkbench
         state: present
+
+    - name: Pip packages
+      pip:
+        executable: /usr/local/bin/pip3
+        name:
+          - virtualenvwrapper
+        state: present
+        extra_args: --user
 
     - name: download aws zsh completion
       get_url:
