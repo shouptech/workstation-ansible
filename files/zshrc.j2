@@ -153,7 +153,7 @@ if [ $commands[pbcopy] ]; then
     # ZP aliases
     alias op.zp.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
     alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
-    alias op.zp.vaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq jq .details.password -r | tr -d '"'"'\n'"'"' | pbcopy'
+    alias op.zp.ansvaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq .details.password -r | tr -d '"'"'\n'"'"' | pbcopy'
 fi
 
 # Work aliases
