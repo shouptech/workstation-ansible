@@ -141,6 +141,10 @@ if [[ -d $HOME/.npm-packages ]]; then
     export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 fi
 
+if [ $commands[op] ]; then
+    alias op.login='eval $(op signin {{ op_profile }})'
+fi
+
 # Work aliases
 if [[ "$HOST" =~ "^DEN-(.*)" ]] ; then
     domainusername=mshoup
