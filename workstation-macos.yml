@@ -33,11 +33,14 @@
           - pyenv-virtualenv
           - pyenv-virtualenvwrapper
           - go
+          - packer
         state: present
 
     - name: Brew cask
       homebrew_cask:
-        name: vscodium
+        name:
+          - vscodium
+          - vagrant
         state: present
 
     - name: download aws zsh completion
