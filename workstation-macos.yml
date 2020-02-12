@@ -75,6 +75,7 @@
           - go
           - packer
           - saml2aws
+          - terraform@0.11
         state: present
 
     - name: Brew cask
