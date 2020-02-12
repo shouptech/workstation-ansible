@@ -52,6 +52,9 @@
   vars:
     ansible_become: false
 
+    # Version of ruby to setup
+    ruby_version: "2.6.3"
+
   tasks:
     - name: home bin dir
       file:
@@ -70,12 +73,20 @@
           - gnupg
           - ansible
           - docker
+          - docker-compose
           - pyenv-virtualenv
           - pyenv-virtualenvwrapper
           - go
           - packer
           - saml2aws
           - terraform@0.11
+          - kubernetes-cli
+          - awscli
+          - aws-iam-authenticator
+          - rbenv
+          - ruby-build
+          - python3
+          - node
         state: present
 
     - name: Brew cask
@@ -125,3 +136,16 @@
       copy:
         src: files/gentoo-mod.zsh-theme
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
+
+    - name: Check for Ruby {{ ruby_version }}
+      stat:
+        path: "{{ ansible_env.HOME }}/.rbenv/versions/{{ ruby_version }}"
+      register: ruby_stat
+
+    - name: Install Ruby
+      shell: "rbenv install {{ ruby_version }}"
+      when: not ruby_stat.stat.exists
+
+    - name: Set global Ruby
+      shell: "rbenv global {{ ruby_version }}"
+      when: not ruby_stat.stat.exists
