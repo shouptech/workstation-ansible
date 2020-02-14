@@ -127,6 +127,10 @@ if [ $commands[minikube] ]; then
     source <(minikube completion zsh)
 fi
 
+# Kube aliases
+alias k8s.home="source ~/.zshrc; export FLUX_FORWARD_NAMESPACE=flux; export PS1='(k8s: home) $PS1'; export KUBECONFIG=~/.kube/home"
+alias k8s.off="unset FLUX_FORWARD_NAMESPACE; unset KUBECONFIG; source ~/.zshrc"
+
 if [[ -d /opt/go/{{ golang_version }}/bin ]]; then
     export PATH=/opt/go/{{ golang_version }}/bin:$PATH
 fi
@@ -157,6 +161,10 @@ if [ $commands[pbcopy] ]; then
     alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
     alias op.zp.ansvaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq .details.password -r | tr -d '"'"'\n'"'"' | pbcopy'
 fi
+
+# OpenVPN aliases
+alias ovpn.zp='sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn'
+alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn'
 
 # rbenv
 if [ $commands[rbenv] ]; then

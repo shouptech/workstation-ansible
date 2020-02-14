@@ -84,6 +84,7 @@
           - rbenv
           - ruby-build
           - node
+          - fluxctl
         state: present
 
     - name: Default to python3
