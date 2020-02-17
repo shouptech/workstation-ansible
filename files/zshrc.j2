@@ -255,3 +255,8 @@ function clone.shouptech {
   git clone "git@gitlab.com:shouptech/${1}.git"
   cd "${1}"
 }
+
+# Alias for codium
+if [ $commands[codium] ]; then
+  alias code=codium
+fi
