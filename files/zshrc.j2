@@ -160,6 +160,15 @@ if [ $commands[pbcopy] ]; then
     alias op.zp.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
     alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
     alias op.zp.ansvaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq .details.password -r | tr -d '"'"'\n'"'"' | pbcopy'
+
+    op.zp.aws() {
+        aws_username="mike.shoup@zenplanner.com"
+        aws_password=$(op get item "JumpCloud" | jq '.details.fields[] | select(.designation=="password").value' -r | tr -d "\n")
+        if [[ "${aws_password}" == "" ]] ; then ; return 1 ; fi
+        aws_otp=$(op get totp "JumpCloud" | tr -d "\n")
+        if [[ "${aws_otp}" == "" ]] ; then ; return 1 ; fi
+        saml2aws login --username="${aws_username}" --password="${aws_password}" --mfa-token="${aws_otp}" --skip-prompt
+    }
 fi
 
 # OpenVPN aliases
@@ -244,13 +253,13 @@ if [[ -d "$HOME/Library/Python/3.7" ]] ; then
 fi
 
 # Cloning shortcuts
-function clone.zp {
+clone.zp() {
   cd ~/code/github.com/ZenPlanner
   git clone "git@github.com:ZenPlanner/${1}.git"
   cd "${1}"
 }
 
-function clone.shouptech {
+clone.shouptech() {
   cd ~/code/gitlab.com/shouptech
   git clone "git@gitlab.com:shouptech/${1}.git"
   cd "${1}"
