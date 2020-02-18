@@ -72,8 +72,6 @@
         name:
           - gnupg
           - ansible
-          - docker
-          - docker-compose
           - go
           - packer
           - saml2aws
@@ -101,6 +99,7 @@
           - vagrant
           - mysqlworkbench
           - nextcloud
+          - docker
         state: present
 
     - name: Pip packages
