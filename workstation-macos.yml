@@ -99,6 +99,7 @@
           - vscodium
           - vagrant
           - mysqlworkbench
+          - nextcloud
         state: present
 
     - name: Pip packages
