@@ -85,6 +85,7 @@
           - ruby-build
           - node
           - fluxctl
+          - tfenv
         state: present
 
     - name: Default to python3
