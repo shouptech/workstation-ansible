@@ -269,3 +269,11 @@ clone.shouptech() {
 if [ $commands[codium] ]; then
   alias code=codium
 fi
+
+# Function for setting AWS profile
+aws.profile() {
+    export AWS_PROFILE="${1}"
+}
+aws.off() {
+    unset AWS_PROFILE
+}
