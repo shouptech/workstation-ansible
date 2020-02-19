@@ -168,7 +168,7 @@
     - name: slack package
       tags: packages
       apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.2.0-amd64.deb
+        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.3.2-amd64.deb
 
     - name: local user shell
       user:
