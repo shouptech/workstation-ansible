@@ -325,3 +325,9 @@
       template:
         src: files/npmrc.j2
         dest: "{{ ansible_env.HOME }}/.npmrc"
+
+    - name: Download repo clone script
+      get_url:
+        url: https://gitlab.com/snippets/1943646/raw
+        dest: "{{ ansible_env.HOME }}/.local/bin/clone_repo"
+        mode: "0755"

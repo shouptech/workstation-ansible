@@ -163,3 +163,9 @@
     - name: Set global Ruby
       shell: "rbenv global {{ ruby_version }}"
       when: not ruby_stat.stat.exists
+
+    - name: Download repo clone script
+      get_url:
+        url: https://gitlab.com/snippets/1943646/raw
+        dest: "{{ ansible_env.HOME }}/.local/bin/clone_repo"
+        mode: "0755"
