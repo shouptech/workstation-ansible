@@ -128,8 +128,37 @@ if [ $commands[minikube] ]; then
 fi
 
 # Kube aliases
-alias k8s.home="source ~/.zshrc; export FLUX_FORWARD_NAMESPACE=flux; export PS1='(k8s: home) $PS1'; export KUBECONFIG=~/.kube/home"
-alias k8s.off="unset FLUX_FORWARD_NAMESPACE; unset KUBECONFIG; source ~/.zshrc"
+k8s.home() {
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1='(k8s: home) '"$K8S_OLD_PS1"
+    else
+        export K8S_OLD_PS1="$PS1"
+        export PS1='(k8s: home) '"$PS1"
+    fi
+    export FLUX_FORWARD_NAMESPACE=flux
+    export KUBECONFIG=~/.kube/home
+}
+
+k8s.viperdev() {
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1='(k8s: viperdev) '"$K8S_OLD_PS1"
+    else
+        export K8S_OLD_PS1="$PS1"
+        export PS1='(k8s: viperdev) '"$PS1"
+    fi
+    export KUBECONFIG=~/.kube/viperdev
+}
+
+k8s.off() {
+    unset KUBECONFIG
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1="$K8S_OLD_PS1"
+        unset K8S_OLD_PS1
+    fi
+    if [ ! -z "$FLUX_FORWARD_NAMESPACE" ]; then
+        unset FLUX_FORWARD_NAMESPACE
+    fi
+}
 
 if [[ -d /opt/go/{{ golang_version }}/bin ]]; then
     export PATH=/opt/go/{{ golang_version }}/bin:$PATH
