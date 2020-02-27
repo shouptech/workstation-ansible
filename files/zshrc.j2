@@ -203,7 +203,7 @@ if [ $commands[pbcopy] ]; then
         motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
         echo -n "${motp_pin}${motp_code}" | pbcopy
     }
-    alias op.zp.hosting="op get item 'Daxko Hosting Domain' | jq '.details.fields[] | select(.designation=="'"'"password"'"'").value' -r | tr -d "'"\n"'
+    alias op.zp.hosting="op get item 'Daxko Hosting Domain' | jq '.details.fields[] | select(.designation=="'"'"password"'"'").value' -r | tr -d "'"\n" | pbcopy'
 fi
 
 # OpenVPN aliases
