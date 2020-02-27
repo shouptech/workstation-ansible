@@ -198,11 +198,28 @@ if [ $commands[pbcopy] ]; then
         if [[ "${aws_otp}" == "" ]] ; then ; return 1 ; fi
         saml2aws login --username="${aws_username}" --password="${aws_password}" --mfa-token="${aws_otp}" --skip-prompt
     }
+    op.zp.motp() {
+        motp_code=$(op get totp "Daxko Hosting Domain"  | tr -d "\n")
+        motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
+        echo -n "${motp_pin}${motp_code}" | pbcopy
+    }
+    alias op.zp.hosting="op get item 'Daxko Hosting Domain' | jq '.details.fields[] | select(.designation=="'"'"password"'"'").value' -r | tr -d "'"\n"'
 fi
 
 # OpenVPN aliases
 alias ovpn.zp='sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn'
 alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn'
+ovpn.hosting() {
+    temp_file=$(mktemp)
+
+    motp_code=$(op get totp "Daxko Hosting Domain"  | tr -d "\n")
+    motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
+    echo "mshoup" > ${temp_file}
+    echo "${motp_pin}${motp_code}" >> ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/zp/hosting.ovpn --auth-user-pass ${temp_file}
+
+    rm -f ${temp_file}
+}
 
 # rbenv
 if [ $commands[rbenv] ]; then
