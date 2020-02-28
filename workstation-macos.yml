@@ -84,6 +84,7 @@
           - node
           - fluxctl
           - tfenv
+          - openjdk
         state: present
 
     - name: Default to python3

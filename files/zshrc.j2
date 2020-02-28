@@ -323,3 +323,7 @@ aws.profile() {
 aws.off() {
     unset AWS_PROFILE
 }
+
+if [[ -d "/usr/local/opt/openjdk/bin" ]] ; then
+    export PATH="/usr/local/opt/openjdk/bin:$PATH"
+fi
