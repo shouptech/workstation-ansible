@@ -84,9 +84,7 @@
         update_cache: false
       with_items:
         - 'ppa:nextcloud-devs/client'
-        - deb http://download.virtualbox.org/virtualbox/debian bionic contrib
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
-        - deb [arch=amd64] https://packages.microsoft.com/ubuntu/18.04/prod bionic main
 
     - name: update apt cache
       tags: packages
@@ -112,20 +110,20 @@
         - network-manager-l2tp-gnome
         - network-manager-openvpn
         - network-manager-openvpn-gnome
-        - virtualbox-6.1
         - dkms
         - mesa-utils
         - whois
         - remmina
         - remmina-plugin-rdp
-        - freerdp-x11
+        - freerdp2-x11
         - default-jre
         - virtualenv
         - gstreamer1.0-libav
         - docker.io
         - docker-compose
         - qemu-kvm
-        - libvirt-bin
+        - libvirt-daemon
+        - libvirt-clients
         - bridge-utils
         - virt-manager
         - gimp
@@ -152,13 +150,6 @@
         name: fluxctl
         classic: yes
         state: present
-
-    - name: Temp dir for download
-      tempfile:
-        state: directory
-      register: temp_directory
-      notify: remove temp directory
-      tags: opcli
 
     - name: vscodium package
       tags: packages
@@ -200,6 +191,14 @@
       register: op_install_check
       changed_when: no
       failed_when: no
+      tags: opcli
+
+    - name: Temp dir for download
+      tempfile:
+        state: directory
+      register: temp_directory
+      notify: remove temp directory
+      when: op_install_check.stdout.find(opcli_version) == -1
       tags: opcli
 
     - name: Download OP zip
