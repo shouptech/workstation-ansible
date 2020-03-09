@@ -167,6 +167,11 @@
       apt:
         deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.3.2-amd64.deb
 
+    - name: zoom package
+      tags: packages
+      apt:
+        deb: https://zoom.us/client/latest/zoom_amd64.deb
+
     - name: local user shell
       user:
         name: "{{ ansible_env.SUDO_USER }}"
