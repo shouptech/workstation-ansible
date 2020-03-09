@@ -84,6 +84,7 @@
         update_cache: false
       with_items:
         - 'ppa:nextcloud-devs/client'
+        - ppa:obsproject/obs-studio
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
 
     - name: update apt cache
@@ -95,9 +96,8 @@
     - name: workstation packages
       tags: packages
       apt:
-        name: "{{ item }}"
         state: present
-      with_items:
+        name:
         - vim
         - ansible
         - terminator
@@ -144,11 +144,17 @@
         - python-pip
         - ruby-full
         - unzip
+        - obs-studio
 
     - name: Fluxctl
       snap:
         name: fluxctl
         classic: yes
+        state: present
+
+    - name: kdenlive
+      snap:
+        name: kdenlive
         state: present
 
     - name: vscodium package
