@@ -145,6 +145,8 @@
         - ruby-full
         - unzip
         - obs-studio
+        - evolution
+        - evolution-ews
 
     - name: Fluxctl
       snap:
