@@ -341,3 +341,17 @@
         url: https://gitlab.com/snippets/1943646/raw
         dest: "{{ ansible_env.HOME }}/.local/bin/clone_repo"
         mode: "0755"
+
+    - name: Install tfenv
+      git:
+        repo: https://github.com/tfutils/tfenv.git
+        dest: "{{ ansible_env.HOME }}/.tfenv"
+
+    - name: Create symlinks for tfenv and terraform
+      file:
+        src: "{{ ansible_env.HOME }}/.tfenv/bin/{{ item }}"
+        dest: "{{ ansible_env.HOME }}/.local/bin/{{ item }}"
+        state: link
+      with_items:
+      - tfenv
+      - terraform
