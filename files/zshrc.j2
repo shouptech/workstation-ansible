@@ -149,6 +149,16 @@ k8s.viperdev() {
     export KUBECONFIG=~/.kube/viperdev
 }
 
+k8s.zpeks() {
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1='(k8s: zpeks) '"$K8S_OLD_PS1"
+    else
+        export K8S_OLD_PS1="$PS1"
+        export PS1='(k8s: zpeks) '"$PS1"
+    fi
+    export KUBECONFIG=~/.kube/zpeks
+}
+
 k8s.off() {
     unset KUBECONFIG
     if [ ! -z "$K8S_OLD_PS1" ]; then
@@ -189,6 +199,7 @@ if [ $commands[pbcopy] ]; then
     alias op.zp.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
     alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
     alias op.zp.ansvaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq .details.password -r | tr -d '"'"'\n'"'"' | pbcopy'
+    alias op.zp.jumpcloud='op get item "JumpCloud" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.type=="P").value'"'"' -r | tr -d '"'"'\n'"'"' | pbcopy'
 
     op.zp.aws() {
         aws_username="mike.shoup@zenplanner.com"
@@ -232,29 +243,7 @@ if [[ "$HOST" =~ "^DEN-(.*)" ]] ; then
     username=admmshoup
     key="~/.ssh/id_rsa"
 
-    ###ALIASES###
-    #General Stuff
-    alias nosleep='pmset noidle'
-    alias ll='ls -lAGhp'
-    alias c='clear'
-    alias cp='cp -iv'
-    alias dicker=docker
-
-    #itermocil
-    alias allapp='itermocil app_servers'
-    alias allmq='itermocil mq_workers'
-    alias allsvc='itermocil svc_servers'
-    alias allqa='itermocil qa_servers'
-
     #QA SSH Shortcuts
-    alias ci0="ssh -i $key $username@10.1.50.24"
-    alias qa0="ssh -i $key $username@10.1.50.54"
-    alias qa1="ssh -i $key $username@10.1.50.55"
-    alias qa2="ssh -i $key $username@10.1.50.56"
-    alias qa3="ssh -i $key $username@10.1.50.57"
-    alias qa4="ssh -i $key $username@10.1.50.58"
-    alias qa5="ssh -i $key $username@10.1.50.53"
-    alias qa6="ssh -i $key $username@10.1.50.41"
     alias qajenkins="ssh -i $key $username@qajenkins.zenplanner.com"
 
     #Rabbitmq SSH Shortcuts
