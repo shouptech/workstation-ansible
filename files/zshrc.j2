@@ -218,9 +218,23 @@ if [ $commands[pbcopy] ]; then
 fi
 
 # OpenVPN aliases
-alias ovpn.zp='sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn'
 alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn'
+
+ovpn.zp() {
+    op.login
+    temp_file=$(mktemp)
+    echo "mike.shoup" > ${temp_file}
+    password=$(op get item "Daxko O365 / Domain" | jq '.details.fields[] | select(.type=="P").value' -r | tr -d "\n")
+
+    op get totp "Daxko OpenVPN TOTP" | pbcopy
+
+    echo "${password}" >> ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn --auth-user-pass ${temp_file}
+    rm -f ${temp_file}
+}
+
 ovpn.hosting() {
+    op.login
     temp_file=$(mktemp)
 
     motp_code=$(op get totp "Daxko Hosting Domain"  | tr -d "\n")
