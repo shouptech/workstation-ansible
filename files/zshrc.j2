@@ -218,7 +218,7 @@ if [ $commands[pbcopy] ]; then
 fi
 
 # OpenVPN aliases
-alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn'
+alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn --pull-filter ignore redirect-gateway'
 
 ovpn.zp() {
     op.login
@@ -229,7 +229,7 @@ ovpn.zp() {
     op get totp "Daxko OpenVPN TOTP" | pbcopy
 
     echo "${password}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn --auth-user-pass ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
     rm -f ${temp_file}
 }
 
@@ -241,7 +241,7 @@ ovpn.hosting() {
     motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
     echo "mshoup" > ${temp_file}
     echo "${motp_pin}${motp_code}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/zp/hosting.ovpn --auth-user-pass ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/zp/hosting.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
 
     rm -f ${temp_file}
 }
@@ -329,4 +329,8 @@ aws.off() {
 
 if [[ -d "/usr/local/opt/openjdk/bin" ]] ; then
     export PATH="/usr/local/opt/openjdk/bin:$PATH"
+fi
+
+if [[ -d "/usr/local/opt/helm@2/bin" ]]; then
+    alias use_helm2="export PATH='/usr/local/opt/helm@2/bin:$PATH'"
 fi
