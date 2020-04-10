@@ -147,6 +147,7 @@
         - obs-studio
         - evolution
         - evolution-ews
+        - xclip
 
     - name: Fluxctl
       snap:
