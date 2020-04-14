@@ -1,3 +1,9 @@
+golang_version: '1.14.2'
+
+nodejs_version: "12.x"
+
 opcli_version: "0.8.0"
 opcli_sha256: 29b70379db8c4787e491ab127422acb183267916b989eee81631e08b10742c0a
 op_profile: shoup
+
+saml2aws_version: "2.25.0"
