@@ -191,8 +191,8 @@ if [ $commands[op] ]; then
 fi
 
 # Clipboard command
-if [ $commands[copy_to_clipboard] ]; then
-    alias copy_to_clipboard="copy_to_clipboard"
+if [ $commands[pbcopy] ]; then
+    alias copy_to_clipboard="pbcopy"
 elif [ $commands[xclip] ]; then
     alias copy_to_clipboard="xclip -selection c"
 else
@@ -203,12 +203,13 @@ fi
 alias op.my.workmail='op get item "WorkMail AWS" --vault Personal | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
 
 # ZP aliases
-alias op.zp.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
+alias op.daxko.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
+alias op.daxko.hosting="op get item 'Daxko Hosting Domain' | jq '.details.fields[] | select(.designation=="'"'"password"'"'").value' -r | tr -d "'"\n" | copy_to_clipboard'
 alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
 alias op.zp.ansvaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq .details.password -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-alias op.zp.jumpcloud='op get item "JumpCloud" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.type=="P").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
+alias op.daxko.jumpcloud='op get item "JumpCloud" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.type=="P").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
 
-op.zp.aws() {
+op.daxko.aws() {
     aws_username="mike.shoup@zenplanner.com"
     aws_password=$(op get item "JumpCloud" | jq '.details.fields[] | select(.designation=="password").value' -r | tr -d "\n")
     if [[ "${aws_password}" == "" ]] ; then ; return 1 ; fi
@@ -221,13 +222,22 @@ op.zp.motp() {
     motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
     echo -n "${motp_pin}${motp_code}" | copy_to_clipboard
 }
-alias op.zp.hosting="op get item 'Daxko Hosting Domain' | jq '.details.fields[] | select(.designation=="'"'"password"'"'").value' -r | tr -d "'"\n" | copy_to_clipboard'
+
+alias op.zp.aws="op.daxko.aws"
+
+op.ca.motp() {
+    motp_code=$(op get totp "CA Credentials")
+    motp_pin=$(op get item "CA Credentials" | jq '.details.sections[1].fields[] | select(.t=="pin").v' -r | tr -d "\n")
+    echo -n "${motp_pin}${motp_code}" | copy_to_clipboard
+}
+
+alias op.ca.mshoup='op get item "CA Credentials" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
 
 
 # OpenVPN aliases
 alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn --pull-filter ignore redirect-gateway'
 
-ovpn.zp() {
+ovpn.daxko() {
     op.login
     temp_file=$(mktemp)
     echo "mike.shoup" > ${temp_file}
@@ -237,6 +247,32 @@ ovpn.zp() {
 
     echo "${password}" >> ${temp_file}
     sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
+    rm -f ${temp_file}
+}
+
+ovpn.ca.prod() {
+    op.login
+    temp_file=$(mktemp)
+
+    motp_code=$(op get totp "CA Credentials"  | tr -d "\n")
+    motp_pin=$(op get item "CA Credentials" | jq '.details.sections[1].fields[] | select(.t=="pin").v' -r | tr -d "\n")
+    echo "mshoup" > ${temp_file}
+    echo "${motp_pin}${motp_code}" >> ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/ca/ae1-prod-vpn.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
+
+    rm -f ${temp_file}
+}
+
+ovpn.ca.test() {
+    op.login
+    temp_file=$(mktemp)
+
+    motp_code=$(op get totp "CA Credentials"  | tr -d "\n")
+    motp_pin=$(op get item "CA Credentials" | jq '.details.sections[1].fields[] | select(.t=="pin").v' -r | tr -d "\n")
+    echo "mshoup" > ${temp_file}
+    echo "${motp_pin}${motp_code}" >> ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/ca/ae1-test-vpn.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
+
     rm -f ${temp_file}
 }
 
