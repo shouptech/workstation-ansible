@@ -175,6 +175,8 @@
           name: slack-desktop
         - url: https://zoom.us/client/latest/zoom_amd64.deb
           name: zoom
+        - url: https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb
+          name: chef-workstation
 
     - name: local user shell
       user:
