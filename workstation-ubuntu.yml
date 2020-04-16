@@ -49,6 +49,7 @@
 
   tasks:
     - package_facts:
+        manager: apt
       tags: packages
 
     - name: disable systemd-resolved service
@@ -151,6 +152,7 @@
         - evolution
         - evolution-ews
         - xclip
+        - aptitude
 
     - name: Fluxctl
       snap:
