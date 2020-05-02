@@ -90,6 +90,7 @@
         - 'ppa:nextcloud-devs/client'
         - ppa:obsproject/obs-studio
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
+        - deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian eoan contrib
 
     - name: update apt cache
       tags: packages
@@ -152,7 +153,11 @@
         - evolution
         - evolution-ews
         - xclip
+<<<<<<< HEAD
         - aptitude
+=======
+        - virtualbox-6.1
+>>>>>>> Install virtualbox
 
     - name: Fluxctl
       snap:
