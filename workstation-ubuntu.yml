@@ -153,11 +153,8 @@
         - evolution
         - evolution-ews
         - xclip
-<<<<<<< HEAD
         - aptitude
-=======
         - virtualbox-6.1
->>>>>>> Install virtualbox
 
     - name: Fluxctl
       snap:
