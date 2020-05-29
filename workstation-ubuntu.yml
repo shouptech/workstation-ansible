@@ -48,6 +48,10 @@
         path: "{{ temp_directory.path }}"
 
   tasks:
+    - package_facts:
+        manager: apt
+      tags: packages
+
     - name: disable systemd-resolved service
       systemd:
         name: systemd-resolved
@@ -86,6 +90,7 @@
         - 'ppa:nextcloud-devs/client'
         - ppa:obsproject/obs-studio
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
+        - deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian eoan contrib
 
     - name: update apt cache
       tags: packages
@@ -148,6 +153,8 @@
         - evolution
         - evolution-ews
         - xclip
+        - aptitude
+        - virtualbox-6.1
 
     - name: Fluxctl
       snap:
@@ -160,20 +167,20 @@
         name: kdenlive
         state: present
 
-    - name: vscodium package
+    - name: Packages by URL
       tags: packages
       apt:
-        deb: https://github.com/VSCodium/vscodium/releases/download/1.41.1/codium_1.41.1-1576787344_amd64.deb
-
-    - name: slack package
-      tags: packages
-      apt:
-        deb: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.3.2-amd64.deb
-
-    - name: zoom package
-      tags: packages
-      apt:
-        deb: https://zoom.us/client/latest/zoom_amd64.deb
+        deb: "{{ item.url }}"
+      when: "item.name not in ansible_facts.packages"
+      with_items:
+        - url: https://github.com/VSCodium/vscodium/releases/download/1.44.1/codium_1.44.1-1586947591_amd64.deb
+          name: codium
+        - url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.4.2-amd64.deb
+          name: slack-desktop
+        - url: https://zoom.us/client/latest/zoom_amd64.deb
+          name: zoom
+        - url: https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb
+          name: chef-workstation
 
     - name: local user shell
       user:
