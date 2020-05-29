@@ -159,6 +159,36 @@ k8s.zpeks() {
     export KUBECONFIG=~/.kube/zpeks
 }
 
+k8s.gxptest() {
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1='(k8s: gxptest) '"$K8S_OLD_PS1"
+    else
+        export K8S_OLD_PS1="$PS1"
+        export PS1='(k8s: gxptest) '"$PS1"
+    fi
+    export KUBECONFIG=~/.kube/gxptest
+}
+
+k8s.gxpprod() {
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1='(k8s: gxpprod) '"$K8S_OLD_PS1"
+    else
+        export K8S_OLD_PS1="$PS1"
+        export PS1='(k8s: gxpprod) '"$PS1"
+    fi
+    export KUBECONFIG=~/.kube/gxpprod
+}
+
+k8s.ca-dev() {
+    if [ ! -z "$K8S_OLD_PS1" ]; then
+        export PS1='(k8s: ca-dev) '"$K8S_OLD_PS1"
+    else
+        export K8S_OLD_PS1="$PS1"
+        export PS1='(k8s: ca-dev) '"$PS1"
+    fi
+    export KUBECONFIG=~/.kube/ca-dev
+}
+
 k8s.off() {
     unset KUBECONFIG
     if [ ! -z "$K8S_OLD_PS1" ]; then
