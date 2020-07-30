@@ -144,6 +144,8 @@
           name: zoom
         - url: https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb
           name: chef-workstation
+        - url: https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb
+          name: steam-launcher
 
     - name: local user shell
       user:
