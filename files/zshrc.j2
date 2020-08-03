@@ -319,6 +319,16 @@ ovpn.hosting() {
     rm -f ${temp_file}
 }
 
+ovpn.pls() {
+    op.login
+    temp_file=$(mktemp)
+    echo "mike.shoup" > ${temp_file}
+    password=$(op get item "Jumpcloud" | jq '.details.fields[] | select(.type=="P").value' -r | tr -d "\n")
+    echo "${password}" >> ${temp_file}
+    sudo openvpn --config ~/Nextcloud/vpn/playerspace.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
+    rm -f ${temp_file}
+}
+
 # rbenv
 if [ $commands[rbenv] ]; then
     eval "$(rbenv init -)"
@@ -407,3 +417,5 @@ fi
 if [[ -d "/usr/local/opt/helm@2/bin" ]]; then
     alias use_helm2="export PATH='/usr/local/opt/helm@2/bin:$PATH'"
 fi
+
+[[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
