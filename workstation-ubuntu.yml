@@ -11,32 +11,6 @@
     - geerlingguy.nodejs
 
   handlers:
-    - name: config NetworkManger.conf for default dns
-      lineinfile:
-        dest: /etc/NetworkManager/NetworkManager.conf
-        line: dns=default
-        insertafter: '\[main\]'
-      listen: enable default dns
-
-    - name: remove resolv.conf
-      file:
-        dest: /etc/resolv.conf
-        state: absent
-      listen: enable default dns
-
-    - name: restart network-manager
-      systemd:
-        name: network-manager
-        state: restarted
-      listen: enable default dns
-
-    - name: wait for dns
-      wait_for:
-        host: google.com
-        port: 80
-        timeout: 60
-      listen: enable default dns
-
     - name: restart autofs
       service:
         name: autofs
@@ -51,17 +25,6 @@
     - package_facts:
         manager: apt
       tags: packages
-
-    - name: disable systemd-resolved service
-      systemd:
-        name: systemd-resolved
-        state: stopped
-        enabled: false
-      notify:
-        - enable default dns
-
-    - name: flush handlers
-      meta: flush_handlers
 
     - name: allow nopasswd sudo
       lineinfile:
@@ -90,7 +53,7 @@
         - 'ppa:nextcloud-devs/client'
         - ppa:obsproject/obs-studio
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
-        - deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian eoan contrib
+        - deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bionic contrib
 
     - name: update apt cache
       tags: packages
@@ -118,9 +81,9 @@
         - dkms
         - mesa-utils
         - whois
-        - remmina
-        - remmina-plugin-rdp
-        - freerdp2-x11
+        #- remmina
+        #- remmina-plugin-rdp
+        #- freerdp2-x11
         - default-jre
         - virtualenv
         - gstreamer1.0-libav
@@ -181,6 +144,8 @@
           name: zoom
         - url: https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb
           name: chef-workstation
+        - url: https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb
+          name: steam-launcher
 
     - name: local user shell
       user:
