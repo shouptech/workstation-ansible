@@ -419,3 +419,5 @@ if [[ -d "/usr/local/opt/helm@2/bin" ]]; then
 fi
 
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
+
+[[ -d "$HOME/.pyenv/bin" ]] && export PATH="$HOME/.pyenv/bin:$PATH"
