@@ -397,9 +397,9 @@ clone.shouptech() {
   cd "${1}"
 }
 
-# Alias for codium
-if [ $commands[codium] ]; then
-  alias code=codium
+# VS Studio code alias
+if [[ -f /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ]]; then
+    alias code="/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code"
 fi
 
 # Function for setting AWS profile
