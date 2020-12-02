@@ -6,10 +6,6 @@
     ansible_become_method: sudo
     ansible_become_user: root
 
-  roles:
-    - gantsign.golang
-    - geerlingguy.nodejs
-
   handlers:
     - name: restart autofs
       service:
@@ -53,7 +49,6 @@
         - 'ppa:nextcloud-devs/client'
         - ppa:obsproject/obs-studio
         - deb http://apt.kubernetes.io/ kubernetes-xenial main
-        - deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bionic contrib
 
     - name: update apt cache
       tags: packages
@@ -66,6 +61,7 @@
       apt:
         state: present
         name:
+        - snapd
         - vim
         - ansible
         - terminator
@@ -81,9 +77,6 @@
         - dkms
         - mesa-utils
         - whois
-        #- remmina
-        #- remmina-plugin-rdp
-        #- freerdp2-x11
         - default-jre
         - virtualenv
         - gstreamer1.0-libav
@@ -100,8 +93,6 @@
         - virtualenvwrapper
         - nmap
         - jq
-        - python-boto
-        - python3-boto
         - xournal
         - nfs-common
         - autofs
@@ -109,7 +100,6 @@
         - apt-transport-https
         - kubectl
         - pwgen
-        - python-pip
         - ruby-full
         - unzip
         - obs-studio
@@ -117,13 +107,6 @@
         - evolution-ews
         - xclip
         - aptitude
-        - virtualbox-6.1
-
-    - name: Fluxctl
-      snap:
-        name: fluxctl
-        classic: yes
-        state: present
 
     - name: kdenlive
       snap:
@@ -136,14 +119,10 @@
         deb: "{{ item.url }}"
       when: "item.name not in ansible_facts.packages"
       with_items:
-        - url: https://github.com/VSCodium/vscodium/releases/download/1.44.1/codium_1.44.1-1586947591_amd64.deb
-          name: codium
-        - url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.4.2-amd64.deb
+        - url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.11.3-amd64.deb
           name: slack-desktop
         - url: https://zoom.us/client/latest/zoom_amd64.deb
           name: zoom
-        - url: https://packages.chef.io/files/stable/chef-workstation/0.17.5/ubuntu/18.04/chef-workstation_0.17.5-1_amd64.deb
-          name: chef-workstation
         - url: https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb
           name: steam-launcher
 
@@ -214,60 +193,6 @@
       when: op_install_check.stdout.find(opcli_version) == -1
       tags: opcli
 
-    - name: kubeseal binary
-      get_url:
-        url: https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.9.7/kubeseal-linux-amd64
-        dest: /usr/local/bin/kubeseal
-        sha256sum: 98e5a617fb1d3e9a9ab37c52c09fd9f8ad651122ad2d00b1388dab47de07bac5
-        mode: 0755
-        owner: root
-        group: root
-
-    - name: Check installed version of saml2aws
-      shell: /usr/local/bin/saml2aws --version
-      register: saml2aws_check
-      changed_when: no
-      failed_when: no
-      tags: saml2aws
-
-    - name: Temporary file for saml2aws
-      tempfile:
-        suffix: .tar.gz
-      register: saml2aws_tempfile
-      when: saml2aws_check.stderr.find(saml2aws_version) == -1
-      tags: saml2aws
-
-    - name: Get saml2aws archive
-      get_url:
-        url: "https://github.com/Versent/saml2aws/releases/download/v{{ saml2aws_version }}/saml2aws_{{ saml2aws_version }}_linux_amd64.tar.gz"
-        dest: "{{ saml2aws_tempfile.path }}"
-        checksum: "sha512:https://github.com/Versent/saml2aws/releases/download/v{{ saml2aws_version }}/saml2aws_{{ saml2aws_version }}_linux_amd64.sha512"
-      when: saml2aws_check.stderr.find(saml2aws_version) == -1
-      tags: saml2aws
-
-    - name: Unarchive saml2aws
-      unarchive:
-        src: "{{ saml2aws_tempfile.path }}"
-        dest: /usr/local/bin
-        remote_src: yes
-      when: saml2aws_check.stderr.find(saml2aws_version) == -1
-      tags: saml2aws
-
-    - name: Remove temporary file
-      file:
-        path: "{{ saml2aws_tempfile.path }}"
-        state: absent
-      when: saml2aws_check.stderr.find(saml2aws_version) == -1
-      tags: saml2aws
-
-    - name: Make saml2aws executable
-      file:
-        path: /usr/local/bin/saml2aws
-        owner: root
-        group: root
-        mode: "0755"
-      tags: saml2aws
-
 
 # Tasks to be done as "{{ ansible_env.SUDO_USER }}"
 - hosts: localhost
@@ -290,12 +215,6 @@
       get_url:
         url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh
         dest: "{{ ansible_env.HOME }}/.local/bin/aws_zsh_completer.sh"
-        mode: 0755
-
-    - name: download aws-iam-authenticator
-      get_url:
-        url: https://amazon-eks.s3-us-west-2.amazonaws.com/1.13.7/2019-06-11/bin/linux/amd64/aws-iam-authenticator
-        dest: "{{ ansible_env.HOME }}/.local/bin/aws-iam-authenticator"
         mode: 0755
 
     - name: copy vimrc
@@ -337,24 +256,6 @@
       copy:
         src: files/gentoo-mod.zsh-theme
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
-
-    - name: .kube directory
-      file:
-        dest: "{{ ansible_env.HOME}}/.kube"
-        state: directory
-
-    - name: ruby gems
-      gem:
-        name: "{{ item }}"
-        state: present
-        user_install: yes
-      with_items:
-        - cfn-nag
-
-    - name: copy npmrc
-      template:
-        src: files/npmrc.j2
-        dest: "{{ ansible_env.HOME }}/.npmrc"
 
     - name: Download repo clone script
       get_url:
