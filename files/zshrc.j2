@@ -7,7 +7,7 @@ export ZSH={{ ansible_env.HOME }}/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="gentoo-mod"
+ZSH_THEME="mortalscumbag"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -101,8 +101,6 @@ if [[ -a /usr/local/bin/virtualenvwrapper.sh ]]; then
     source /usr/local/bin/virtualenvwrapper.sh
 elif [[ -a /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]]; then
     source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-elif [[ -a $HOME/Library/Python/3.7/bin/virtualenvwrapper.sh ]]; then
-    source $HOME/Library/Python/3.7/bin/virtualenvwrapper.sh
 fi
 
 # Editor
@@ -139,56 +137,6 @@ k8s.home() {
     export KUBECONFIG=~/.kube/home
 }
 
-k8s.viperdev() {
-    if [ ! -z "$K8S_OLD_PS1" ]; then
-        export PS1='(k8s: viperdev) '"$K8S_OLD_PS1"
-    else
-        export K8S_OLD_PS1="$PS1"
-        export PS1='(k8s: viperdev) '"$PS1"
-    fi
-    export KUBECONFIG=~/.kube/viperdev
-}
-
-k8s.zpeks() {
-    if [ ! -z "$K8S_OLD_PS1" ]; then
-        export PS1='(k8s: zpeks) '"$K8S_OLD_PS1"
-    else
-        export K8S_OLD_PS1="$PS1"
-        export PS1='(k8s: zpeks) '"$PS1"
-    fi
-    export KUBECONFIG=~/.kube/zpeks
-}
-
-k8s.gxptest() {
-    if [ ! -z "$K8S_OLD_PS1" ]; then
-        export PS1='(k8s: gxptest) '"$K8S_OLD_PS1"
-    else
-        export K8S_OLD_PS1="$PS1"
-        export PS1='(k8s: gxptest) '"$PS1"
-    fi
-    export KUBECONFIG=~/.kube/gxptest
-}
-
-k8s.gxpprod() {
-    if [ ! -z "$K8S_OLD_PS1" ]; then
-        export PS1='(k8s: gxpprod) '"$K8S_OLD_PS1"
-    else
-        export K8S_OLD_PS1="$PS1"
-        export PS1='(k8s: gxpprod) '"$PS1"
-    fi
-    export KUBECONFIG=~/.kube/gxpprod
-}
-
-k8s.ca-dev() {
-    if [ ! -z "$K8S_OLD_PS1" ]; then
-        export PS1='(k8s: ca-dev) '"$K8S_OLD_PS1"
-    else
-        export K8S_OLD_PS1="$PS1"
-        export PS1='(k8s: ca-dev) '"$PS1"
-    fi
-    export KUBECONFIG=~/.kube/ca-dev
-}
-
 k8s.off() {
     unset KUBECONFIG
     if [ ! -z "$K8S_OLD_PS1" ]; then
@@ -202,10 +150,6 @@ k8s.off() {
 
 if [[ -d /opt/go/{{ golang_version }}/bin ]]; then
     export PATH=/opt/go/{{ golang_version }}/bin:$PATH
-fi
-
-if [[ -d $HOME/.gem/ruby/2.5.0/bin ]]; then
-    export PATH=$PATH:$HOME/.gem/ruby/2.5.0/bin
 fi
 
 if [[ -d $HOME/.npm-packages ]]; then
@@ -230,193 +174,25 @@ else
 fi
 
 # Personal aliases
-alias op.my.workmail='op get item "WorkMail AWS" --vault Personal | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-
-# ZP aliases
-alias op.daxko.o365='op get item "Daxko O365 / Domain" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-alias op.daxko.hosting="op get item 'Daxko Hosting Domain' | jq '.details.fields[] | select(.designation=="'"'"password"'"'").value' -r | tr -d "'"\n" | copy_to_clipboard'
-alias op.zp.sudopw='op get item "sudo password" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-alias op.zp.ansvaultpw='op get item "Ansible Vault Password" --vault "Zen Planner" | jq .details.password -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-alias op.daxko.jumpcloud='op get item "JumpCloud" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.type=="P").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-
-op.daxko.aws() {
-    aws_username="mike.shoup@zenplanner.com"
-    aws_password=$(op get item "JumpCloud" | jq '.details.fields[] | select(.designation=="password").value' -r | tr -d "\n")
-    if [[ "${aws_password}" == "" ]] ; then ; return 1 ; fi
-    aws_otp=$(op get totp "JumpCloud" | tr -d "\n")
-    if [[ "${aws_otp}" == "" ]] ; then ; return 1 ; fi
-    saml2aws login --username="${aws_username}" --password="${aws_password}" --mfa-token="${aws_otp}" --skip-prompt
-}
-op.zp.motp() {
-    motp_code=$(op get totp "Daxko Hosting Domain"  | tr -d "\n")
-    motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
-    echo -n "${motp_pin}${motp_code}" | copy_to_clipboard
-}
-
-alias op.zp.aws="op.daxko.aws"
-
-op.ca.motp() {
-    motp_code=$(op get totp "CA Credentials")
-    motp_pin=$(op get item "CA Credentials" | jq '.details.sections[1].fields[] | select(.t=="pin").v' -r | tr -d "\n")
-    echo -n "${motp_pin}${motp_code}" | copy_to_clipboard
-}
-
-alias op.ca.mshoup='op get item "CA Credentials" --vault "Zen Planner" | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
-
+#alias op.my.workmail='op get item "WorkMail AWS" --vault Personal | jq '"'"'.details.fields[] | select(.name=="password").value'"'"' -r | tr -d '"'"'\n'"'"' | copy_to_clipboard'
 
 # OpenVPN aliases
-alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn --pull-filter ignore redirect-gateway'
+#alias ovpn.home='sudo openvpn --config /opt/vpn/home.ovpn --pull-filter ignore redirect-gateway'
 
-ovpn.daxko() {
-    op.login
-    temp_file=$(mktemp)
-    echo "mike.shoup" > ${temp_file}
-    password=$(op get item "Daxko O365 / Domain" | jq '.details.fields[] | select(.type=="P").value' -r | tr -d "\n")
-
-    op get totp "Daxko OpenVPN TOTP" | copy_to_clipboard
-
-    echo "${password}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/zp/client.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
-    rm -f ${temp_file}
-}
-
-ovpn.ca.prod() {
-    op.login
-    temp_file=$(mktemp)
-
-    motp_code=$(op get totp "CA Credentials"  | tr -d "\n")
-    motp_pin=$(op get item "CA Credentials" | jq '.details.sections[1].fields[] | select(.t=="pin").v' -r | tr -d "\n")
-    echo "mshoup" > ${temp_file}
-    echo "${motp_pin}${motp_code}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/ca/ae1-prod-vpn.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
-
-    rm -f ${temp_file}
-}
-
-ovpn.ca.test() {
-    op.login
-    temp_file=$(mktemp)
-
-    motp_code=$(op get totp "CA Credentials"  | tr -d "\n")
-    motp_pin=$(op get item "CA Credentials" | jq '.details.sections[1].fields[] | select(.t=="pin").v' -r | tr -d "\n")
-    echo "mshoup" > ${temp_file}
-    echo "${motp_pin}${motp_code}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/ca/ae1-test-vpn.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
-
-    rm -f ${temp_file}
-}
-
-ovpn.hosting() {
-    op.login
-    temp_file=$(mktemp)
-
-    motp_code=$(op get totp "Daxko Hosting Domain"  | tr -d "\n")
-    motp_pin=$(op get item "Daxko Hosting Domain" | jq '.details.sections[0].fields[] | select(.t=="pin").v' -r | tr -d "\n")
-    echo "mshoup" > ${temp_file}
-    echo "${motp_pin}${motp_code}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/zp/hosting.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
-
-    rm -f ${temp_file}
-}
-
-ovpn.pls() {
-    op.login
-    temp_file=$(mktemp)
-    echo "mike.shoup" > ${temp_file}
-    password=$(op get item "Jumpcloud" | jq '.details.fields[] | select(.type=="P").value' -r | tr -d "\n")
-    echo "${password}" >> ${temp_file}
-    sudo openvpn --config ~/Nextcloud/vpn/playerspace.ovpn --auth-user-pass ${temp_file} --pull-filter ignore redirect-gateway
-    rm -f ${temp_file}
-}
 
 # rbenv
 if [ $commands[rbenv] ]; then
     eval "$(rbenv init -)"
 fi
 
-# Work aliases
-if [[ "$HOST" =~ "^DEN-(.*)" ]] ; then
-    domainusername=mshoup
-    username=admmshoup
-    key="~/.ssh/id_rsa"
-
-    #QA SSH Shortcuts
-    alias qajenkins="ssh -i $key $username@qajenkins.zenplanner.com"
-
-    #Rabbitmq SSH Shortcuts
-    alias rabbitmq2="ssh -i $key $username@18.234.127.110"
-    alias rabbitmq0="ssh -i $key $username@54.144.212.160"
-    alias rabbitmq1="ssh -i $key $username@54.91.111.233"
-
-    #Hosting Production Servers (Note: key/username necessary as that is handled in ~/.ssh/config)
-    alias app0="ssh 10.129.10.10"
-    alias app1="ssh 10.129.10.11"
-    alias app2="ssh 10.129.10.12"
-    alias app3="ssh 10.129.10.13"
-    alias app4="ssh 10.129.10.14"
-    alias app5="ssh 10.129.10.15"
-    alias app6="ssh 10.129.10.16"
-    alias app7="ssh 10.129.10.17"
-    alias app8="ssh 10.129.10.18"
-    alias app9="ssh 10.129.10.19"
-    alias odin="ssh 10.129.10.8"
-    alias beta0="ssh 10.129.10.20"
-    alias beta1="ssh 10.129.10.21"
-    alias hook0="ssh 10.129.10.24"
-    alias hook1="ssh 10.129.10.25"
-    alias preview0="ssh 10.129.10.26"
-    alias preview1="ssh 10.129.10.27"
-    alias jenkins="ssh 10.129.10.50"
-    alias service0="ssh 10.129.10.37"
-    alias service1="ssh 10.129.10.38"
-
-    #Prod Utility Servers (Monitoring/Jump/etc)
-    alias r6col="ssh 10.129.10.39"
-    alias jump="ssh -i $key $domainusername@10.129.0.129"
-    alias lmcol2="ssh -i $key $username@10.129.6.69"
-
-    export PATH=$HOME/bin:$PATH
-    export PATH=$(brew --prefix openvpn)/sbin:$PATH
-fi
-
-# MacOS pip user location
-if [[ -d "$HOME/Library/Python/3.7" ]] ; then
-    export PATH="$HOME/Library/Python/3.7/bin:$PATH"
-fi
-
-# Cloning shortcuts
-clone.zp() {
-  cd ~/code/github.com/ZenPlanner
-  git clone "git@github.com:ZenPlanner/${1}.git"
-  cd "${1}"
-}
-
-clone.shouptech() {
-  cd ~/code/gitlab.com/shouptech
-  git clone "git@gitlab.com:shouptech/${1}.git"
-  cd "${1}"
-}
-
-# VS Studio code alias
-if [[ -f /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ]]; then
-    alias code="/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code"
-fi
-
 # Function for setting AWS profile
 aws.profile() {
     export AWS_PROFILE="${1}"
 }
+
 aws.off() {
     unset AWS_PROFILE
 }
-
-if [[ -d "/usr/local/opt/openjdk/bin" ]] ; then
-    export PATH="/usr/local/opt/openjdk/bin:$PATH"
-fi
-
-if [[ -d "/usr/local/opt/helm@2/bin" ]]; then
-    alias use_helm2="export PATH='/usr/local/opt/helm@2/bin:$PATH'"
-fi
 
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
 

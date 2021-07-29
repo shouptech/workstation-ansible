@@ -125,6 +125,8 @@
           name: zoom
         - url: https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb
           name: steam-launcher
+        - url: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+          name: code
 
     - name: local user shell
       user:
