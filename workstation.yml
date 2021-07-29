@@ -103,8 +103,7 @@
         - ruby-full
         - unzip
         - obs-studio
-        - evolution
-        - evolution-ews
+        - thunderbird
         - xclip
         - aptitude
 
@@ -119,7 +118,7 @@
         deb: "{{ item.url }}"
       when: "item.name not in ansible_facts.packages"
       with_items:
-        - url: https://downloads.slack-edge.com/linux_releases/slack-desktop-4.11.3-amd64.deb
+        - url: https://downloads.slack-edge.com/releases/linux/4.18.0/prod/x64/slack-desktop-4.18.0-amd64.deb
           name: slack-desktop
         - url: https://zoom.us/client/latest/zoom_amd64.deb
           name: zoom
@@ -127,6 +126,8 @@
           name: steam-launcher
         - url: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
           name: code
+        - url: https://downloads.1password.com/linux/debian/amd64/stable/1password-latest.deb
+          name: 1password
 
     - name: local user shell
       user:
@@ -248,16 +249,6 @@
       template:
         src: files/zshrc.j2
         dest: "{{ ansible_env.HOME }}/.zshrc"
-
-    - name: oh-my-zsh custom theme directory
-      file:
-        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
-        state: directory
-
-    - name: copy custom theme
-      copy:
-        src: files/gentoo-mod.zsh-theme
-        dest: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/themes"
 
     - name: Download repo clone script
       get_url:
