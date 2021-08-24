@@ -36,8 +36,6 @@
         state: present
 
       with_items:
-        - https://www.virtualbox.org/download/oracle_vbox_2016.asc
-        - https://www.virtualbox.org/download/oracle_vbox.asc
         - https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
     - name: apt repositories
