@@ -267,3 +267,9 @@
       with_items:
       - tfenv
       - terraform
+
+    - name: Copy aws login script for YSG
+      copy:
+        src: op.ysg.aws.login.sh
+        dest: "${{ ansible_env.HOME }}/.local/bin/op.ysg.aws.login"
+        mode: 0755
