@@ -201,6 +201,17 @@
   vars:
     ansible_become: false
   tasks:
+    - name: Home SSH directory
+      file:
+        dest: "{{ ansible_env.HOME}}/.ssh"
+        state: directory
+        mode: 0700
+
+    - name: Copy SSH Config
+      copy:
+        src: ssh_config
+        dest: "{{ ansible_env.HOME}}/.ssh/config"
+
     - name: home bin dir
       file:
         dest: "{{ ansible_env.HOME }}/.local/bin"
@@ -271,5 +282,5 @@
     - name: Copy aws login script for YSG
       copy:
         src: op.ysg.aws.login.sh
-        dest: "${{ ansible_env.HOME }}/.local/bin/op.ysg.aws.login"
+        dest: "{{ ansible_env.HOME }}/.local/bin/op.ysg.aws.login"
         mode: 0755
