@@ -7,11 +7,6 @@
     ansible_become_user: root
 
   handlers:
-    - name: restart autofs
-      service:
-        name: autofs
-        state: restarted
-
     - name: remove temp directory
       file:
         state: absent
@@ -38,16 +33,6 @@
       with_items:
         - https://packages.cloud.google.com/apt/doc/apt-key.gpg
 
-    - name: apt repositories
-      tags: packages
-      apt_repository:
-        repo: "{{ item }}"
-        update_cache: false
-      with_items:
-        - 'ppa:nextcloud-devs/client'
-        - ppa:obsproject/obs-studio
-        - deb http://apt.kubernetes.io/ kubernetes-xenial main
-
     - name: update apt cache
       tags: packages
       apt:
@@ -59,12 +44,9 @@
       apt:
         state: present
         name:
-        - snapd
         - vim
-        - ansible
         - terminator
         - zsh
-        - nextcloud-client
         - fonts-hack-web
         - network-manager-openconnect
         - network-manager-openconnect-gnome
@@ -76,10 +58,7 @@
         - mesa-utils
         - whois
         - default-jre
-        - virtualenv
         - gstreamer1.0-libav
-        - docker.io
-        - docker-compose
         - qemu-kvm
         - libvirt-daemon
         - libvirt-clients
@@ -88,27 +67,16 @@
         - gimp
         - ssh-askpass-fullscreen
         - awscli
-        - virtualenvwrapper
         - nmap
         - jq
         - xournal
         - nfs-common
-        - autofs
         - cowsay
         - apt-transport-https
-        - kubectl
         - pwgen
-        - ruby-full
         - unzip
-        - obs-studio
-        - thunderbird
         - xclip
         - aptitude
-
-    - name: kdenlive
-      snap:
-        name: kdenlive
-        state: present
 
     - name: Packages by URL
       tags: packages
@@ -116,7 +84,7 @@
         deb: "{{ item.url }}"
       when: "item.name not in ansible_facts.packages"
       with_items:
-        - url: https://downloads.slack-edge.com/releases/linux/4.18.0/prod/x64/slack-desktop-4.18.0-amd64.deb
+        - url: https://downloads.slack-edge.com/releases/linux/4.34.120/prod/x64/slack-desktop-4.34.120-amd64.deb
           name: slack-desktop
         - url: https://zoom.us/client/latest/zoom_amd64.deb
           name: zoom
@@ -131,26 +99,6 @@
       user:
         name: "{{ ansible_env.SUDO_USER }}"
         shell: /usr/bin/zsh
-
-    - name: autofs enable
-      lineinfile:
-        dest: /etc/auto.master
-        regexp: '^#/net'
-        line: '/net   -hosts'
-        backrefs: true
-      notify:
-        - restart autofs
-
-    - name: enable autofs service
-      service:
-        name: autofs
-        enabled: yes
-
-    - name: add user to docker group
-      user:
-        name: "{{ ansible_env.SUDO_USER }}"
-        groups: docker
-        append: yes
 
     - name: Check installed 1Password version
       shell: /usr/local/bin/op --version
@@ -217,12 +165,6 @@
         dest: "{{ ansible_env.HOME }}/.local/bin"
         state: directory
 
-    - name: minikube
-      get_url:
-        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-        dest: "{{ ansible_env.HOME }}/.local/bin/minikube"
-        mode: 0755
-
     - name: download aws zsh completion
       get_url:
         url: https://raw.githubusercontent.com/aws/aws-cli/develop/bin/aws_zsh_completer.sh
@@ -241,7 +183,7 @@
 
     - name: install oh-my-zsh
       git:
-        repo: git://github.com/robbyrussell/oh-my-zsh.git
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
         dest: "{{ ansible_env.HOME }}/.oh-my-zsh"
 
     - name: .zsh directory
@@ -279,8 +221,3 @@
       - tfenv
       - terraform
 
-    - name: Copy aws login script for YSG
-      copy:
-        src: op.ysg.aws.login.sh
-        dest: "{{ ansible_env.HOME }}/.local/bin/op.ysg.aws.login"
-        mode: 0755
